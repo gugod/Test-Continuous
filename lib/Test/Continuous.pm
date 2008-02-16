@@ -76,9 +76,8 @@ This document describes Test::Continuous version 0.0.1
 
 =head1 DESCRIPTION
 
-<I>Continuous Testing</I> is a concept to re-run software tests
+I<Continuous Testing> is a concept and tool to re-run software tests
 as soon as the developer saved the source code.
-
 
 See also L<http://groups.csail.mit.edu/pag/continuoustesting/> for the
 original implementation of Continuous Testing as a Eclipse plugin.
@@ -126,6 +125,16 @@ No bugs have been reported.
 Please report any bugs or feature requests to
 C<bug-test-continuous@rt.cpan.org>, or through the web interface at
 L<http://rt.cpan.org>.
+
+=head1 TODO
+
+=over
+
+=item A good name for executable.
+
+=item Detect and run only a subset of tests instead of running whole test suite everytime.
+
+=back
 
 =head1 AUTHOR
 
