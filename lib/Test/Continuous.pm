@@ -1,6 +1,6 @@
 use warnings;
 use strict;
-package Test::Continuously;
+package Test::Continuous;
 
 use 5.008;
 
@@ -20,7 +20,7 @@ our @EXPORT = qw(&runtests);
 sub _run_once {
     my $prove = App::Prove->new;
     $prove->process_args(
-        "--formatter" => "Test::Continuously::Formatter",
+        "--formatter" => "Test::Continuous::Formatter",
         "-m",
         "--norc", "--nocolor", "-Q", "-l", "t"
     );
@@ -63,16 +63,16 @@ __END__
 
 =head1 NAME
 
-Test::Continuously - Run your tests suit continusouly when developing .
+Test::Continuous - Run your tests suit continusouly when developing .
 
 =head1 VERSION
 
-This document describes Test::Continuously version 0.0.1
+This document describes Test::Continuous version 0.0.1
 
 =head1 SYNOPSIS
 
     % cd MyModule/
-    % perl -MTest::Continuously -e runtests
+    % perl -MTest::Continuous -e runtests
 
 =head1 DESCRIPTION
 
@@ -95,7 +95,7 @@ the same concept of implementation in Ruby's world.
 This is the only function that you should be calling, directly
 from command line:
 
-    perl -MTest::Continuously -e runtests
+    perl -MTest::Continuous -e runtests
 
 It'll start monitoring the mtime of all files under current working
 directy. If there's any update, it'll run your module test under t/
@@ -109,7 +109,7 @@ on Mac.
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
-Test::Continuously requires no configuration files or environment variables.
+Test::Continuous requires no configuration files or environment variables.
 
 =head1 DEPENDENCIES
 
@@ -124,7 +124,7 @@ None reported.
 No bugs have been reported.
 
 Please report any bugs or feature requests to
-C<bug-test-continuously@rt.cpan.org>, or through the web interface at
+C<bug-test-continuous@rt.cpan.org>, or through the web interface at
 L<http://rt.cpan.org>.
 
 =head1 AUTHOR

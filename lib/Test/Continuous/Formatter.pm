@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-package Test::Continuously::Formatter;
+package Test::Continuous::Formatter;
 use base 'TAP::Formatter::Console';
 
 use IO::String;
@@ -27,7 +27,7 @@ my $VERSION = "0.0.1";
                 Log::Dispatch::MacGrowl->new(
                     name => "growl",
                     min_level => "debug",
-                    app_name => "Test::Continuously",
+                    app_name => "Test::Continuous",
                     title => "Test Report",
                     icon_file => '/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/AlertCautionIcon.icns',
                     sticky => 0,
@@ -67,7 +67,7 @@ sub summary {
 
 =head1 NAME
 
-Test::Continuously::Formatter - TAP Formatter for Test::Continuously
+Test::Continuous::Formatter - TAP Formatter for Test::Continuous
 
 =head1 SYNOPSIS
 

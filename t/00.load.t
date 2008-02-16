@@ -1,7 +1,7 @@
 use Test::More tests => 1;
 
 BEGIN {
-use_ok( 'Test::Continuously' );
+use_ok( 'Test::Continuous' );
 }
 
-diag( "Testing Test::Continuously $Test::Continuously::VERSION" );
+diag( "Testing Test::Continuous $Test::Continuous::VERSION" );
