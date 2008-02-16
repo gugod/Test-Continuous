@@ -3,7 +3,7 @@ use warnings;
 use inc::Module::Install;
 
 all_from 'lib/Test/Continuous.pm';
-name 'Test-Continuous';
+
 abstract 'Run your tests suite continusouly when developing.';
 
 build_requires  'Test::More'        => '0.42';
