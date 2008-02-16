@@ -9,7 +9,8 @@ use self;
 use Log::Dispatch;
 use Log::Dispatch::Screen;
 
-my $VERSION = "0.0.1";
+use 5.008;
+our $VERSION = "0.0.2";
 
 {
     my $dispatcher;
@@ -29,7 +30,9 @@ my $VERSION = "0.0.1";
                     min_level => "debug",
                     app_name => "Test::Continuous",
                     title => "Test Report",
-                    icon_file => '/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/AlertCautionIcon.icns',
+                    icon_file =>
+                        '/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/' .
+                        (self->{test_failed} ? 'AlertStopIcon.icns' : 'ToolbarInfo.icns'),
                     sticky => 0,
                 ));
         };
@@ -39,7 +42,7 @@ my $VERSION = "0.0.1";
 }
 
 sub _send_notify {
-    self->_dispatcher->notice(message => args[0]);
+    self->_dispatcher->notice(args[0]);
 }
 
 sub summary {
@@ -56,8 +59,13 @@ sub summary {
     my @lines = split(/\n/, $str);
     shift @lines; shift @lines;
 
+    my $summary = join("\n", @lines);
+    if ($summary =~ /FAIL/s) {
+        self->{test_failed} = 1;
+    }
+
     print "\n" . "-" x 45 . "\n";
-    for (split(/\n(?!  )/, join("\n", @lines) )) {
+    for (split(/\n(?!  )/, $summary )) {
         s/ +/ /gs;
         self->_send_notify("$_\n");
     }

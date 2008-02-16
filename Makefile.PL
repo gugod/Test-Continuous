@@ -3,10 +3,13 @@ use warnings;
 use inc::Module::Install;
 
 all_from 'lib/Test/Continuous.pm';
+name 'Test-Continuous';
+abstract 'Run your tests suite continusouly when developing.';
 
 build_requires  'Test::More'        => '0.42';
 
 requires
+    "self" => "0.15",
     "TAP::Harness" => "3.09",
     "App::Prove" => "3.09",
     "Log::Dispatch" => 0;
