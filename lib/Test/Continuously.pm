@@ -21,6 +21,7 @@ sub run_once {
     my $prove = App::Prove->new;
     $prove->process_args(
         "--formatter" => "Test::Continuously::Formatter",
+        "-m",
         "--norc", "--nocolor", "-Q", "-l", "t"
     );
     $prove->run;
@@ -62,18 +63,16 @@ __END__
 
 =head1 NAME
 
-Test::Continuously - [One line description of module's purpose here]
-
+Test::Continuously - Run your tests suit continusouly when developing .
 
 =head1 VERSION
 
 This document describes Test::Continuously version 0.0.1
 
-
 =head1 SYNOPSIS
 
-    use Test::Continuously;
-
+    % cd MyModule/
+    % perl -MTest::Continuously -e runtests
 
 =head1 DESCRIPTION
 
