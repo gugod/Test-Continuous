@@ -9,6 +9,7 @@ our $VERSION = '0.0.2';
 use Exporter::Lite;
 use App::Prove;
 use File::Find;
+use File::Modified;
 use Cwd;
 
 our @EXPORT = qw(&runtests);
@@ -27,33 +28,27 @@ sub _run_once {
     $prove->run;
 }
 
-my %files;
-sub _changed {
-    my $modified = 0;
+sub _files {
+    my @files;
     find sub {
         my $filename = $File::Find::name;
-        return if $filename =~ /~$/;
         return if ! -f $filename;
-
-        my $mtime = (stat($filename))[9];
-        if (exists $files{$filename}) {
-            if ( $files{$filename} < $mtime) {
-                $modified = 1;
-                print STDERR "[MSG] $filename is updated\n";
-            }
-        }
-        else {
-            $modified = 1;
-        }
-        $files{$filename} = $mtime;
+        return unless $filename =~ /\.(p[lm]|t)$/ && -f $filename;
+        push @files, $filename;
     }, getcwd;
-    return $modified;
+    return \ @files;
 }
 
 sub runtests {
-    while (1) {
-        _run_once if _changed;
-        sleep 5;
+    my $d = File::Modified->new( files => _files );
+    while(1) {
+        my @changes = $d->changed;
+        if ( @changes ) {
+            print "[MSG]: $_ was changed.\n" for @changes;
+            $d->update();
+            sleep 1;
+            _run_once;
+        }
     }
 }
 
@@ -133,6 +128,8 @@ L<http://rt.cpan.org>.
 =item A good name for executable.
 
 =item Detect and run only a subset of tests instead of running whole test suite everytime.
+
+=item Accept a per-module config file to tweak different parameters to prove command.
 
 =back
 
