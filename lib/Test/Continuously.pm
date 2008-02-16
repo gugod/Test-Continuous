@@ -76,32 +76,36 @@ This document describes Test::Continuously version 0.0.1
 
 =head1 DESCRIPTION
 
+<I>Continuous Testing</I> is a concept to re-run software tests
+as soon as the developer saved the source code.
 
-=head1 INTERFACE 
 
+See also L<http://groups.csail.mit.edu/pag/continuoustesting/> for the
+original implementation of Continuous Testing as a Eclipse plugin.
+
+See also Zentest L<http://www.zenspider.com/ZSS/Products/ZenTest/> for
+the same concept of implementation in Ruby's world.
+
+=head1 INTERFACE
 
 =over
 
-=item new()
+=item runtests
+
+This is the only function that you should be calling, directly
+from command line:
+
+    perl -MTest::Continuously -e runtests
+
+It'll start monitoring the mtime of all files under current working
+directy. If there's any update, it'll run your module test under t/
+directory with L<App::Prove>.
+
+Test result are displayed on terminal. Also dispatched to Growl if
+C<Log::Dispatch::MacGrowl> is installed. Big plus for perl programmers
+on Mac.
 
 =back
-
-=head1 DIAGNOSTICS
-
-=over
-
-=item C<< Error message here, perhaps with %s placeholders >>
-
-[Description of error here]
-
-=item C<< Another error message here >>
-
-[Description of error here]
-
-[Et cetera, et cetera]
-
-=back
-
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
@@ -109,7 +113,7 @@ Test::Continuously requires no configuration files or environment variables.
 
 =head1 DEPENDENCIES
 
-None.
+L<App::Prove>, L<Log::Dispatcher>, L<Log::Dispatch::MacGrowl>
 
 =head1 INCOMPATIBILITIES
 
@@ -122,7 +126,6 @@ No bugs have been reported.
 Please report any bugs or feature requests to
 C<bug-test-continuously@rt.cpan.org>, or through the web interface at
 L<http://rt.cpan.org>.
-
 
 =head1 AUTHOR
 
