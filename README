@@ -1,0 +1,38 @@
+Test-Continuously version 0.0.1
+
+This module is inspired by "Continuous Testing"
+
+    http://groups.csail.mit.edu/pag/continuoustesting/
+
+Perl module developers can use this module to keep testing their work
+at the same moment they are coding. It keeps polling if any code is
+changed, and run tests if so.
+
+INSTALLATION
+
+To install this module, run the following commands:
+
+    perl Makefile.PL
+    make
+    make test
+    make install
+
+USAGE
+
+To use this, run this at your module directory (where a t/ lives):
+
+    perl -MTest::Continuously -e runtests
+
+Then just switch to your editor and start coding. You shall be
+notified when a round of test is finished.
+
+DEPENDENCIES
+
+Mac::Growl
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2008, Kang-min Liu
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
