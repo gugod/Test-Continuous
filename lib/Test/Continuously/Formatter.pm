@@ -1,3 +1,6 @@
+use strict;
+use warnings;
+
 package Test::Continuously::Formatter;
 use base 'TAP::Formatter::Console';
 
@@ -5,6 +8,8 @@ use IO::String;
 use self;
 use Log::Dispatch;
 use Log::Dispatch::Screen;
+
+my $VERSION = "0.0.1";
 
 {
     my $dispatcher;
@@ -59,3 +64,28 @@ sub summary {
 }
 
 1;
+
+=head1 NAME
+
+Test::Continuously::Formatter - TAP Formatter for Test::Continuously
+
+=head1 SYNOPSIS
+
+You shouldn't use this module directly.
+
+=head1 DESCRIPTION
+
+This package inherits from L<TAP::Formatter::Console>, and dispatch
+test summary to different output channels.
+
+=over
+
+=item summary
+
+Overrides the C<summary> method from parent. Send a processed output
+to a C<Log::Dispatcher> object.
+
+=back
+
+=cut
+

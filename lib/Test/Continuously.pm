@@ -17,7 +17,7 @@ our @EXPORT = qw(&runtests);
     *{App::Prove::_exit} = sub {};
 }
 
-sub run_once {
+sub _run_once {
     my $prove = App::Prove->new;
     $prove->process_args(
         "--formatter" => "Test::Continuously::Formatter",
@@ -52,7 +52,7 @@ sub _changed {
 
 sub runtests {
     while (1) {
-        run_once if _changed;
+        _run_once if _changed;
         sleep 5;
     }
 }
