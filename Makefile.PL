@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use inc::Module::Install;
 
-all_from 'lib/Test/Continuously.pm';
+all_from 'lib/Test/Continuous.pm';
 
 build_requires  'Test::More'        => '0.42';
 
