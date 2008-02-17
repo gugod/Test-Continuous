@@ -4,7 +4,7 @@ package Test::Continuous;
 
 use 5.008;
 
-our $VERSION = '0.0.3';
+our $VERSION = '0.0.4';
 
 use Exporter::Lite;
 use App::Prove;
@@ -13,7 +13,6 @@ use File::Modified;
 use Cwd;
 use Module::ExtractUse;
 use List::MoreUtils qw(uniq);
-use XXX;
 
 our @EXPORT = qw(&runtests);
 {
@@ -76,13 +75,12 @@ sub runtests {
     print "[MSG] Will run continuously test $_\n" for @tests;
     my $d = File::Modified->new( files => [ _files ] );
     while(1) {
-        @changes = $d->changed;
-        if ( @changes ) {
+        if ( @changes = $d->changed ) {
             print "[MSG]: $_ was changed.\n" for @changes;
             $d->update();
-            sleep 1;
-            _run_once( @changes );
+            _run_once;
         }
+        sleep 3;
     }
 }
 
@@ -96,7 +94,7 @@ Test::Continuous - Run your tests suite continusouly when developing.
 
 =head1 VERSION
 
-This document describes Test::Continuous version 0.0.1
+This document describes Test::Continuous version 0.0.4
 
 =head1 SYNOPSIS
 
