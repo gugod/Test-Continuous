@@ -133,6 +133,19 @@ Test result are displayed on terminal. Also dispatched to Growl if
 C<Log::Dispatch::MacGrowl> is installed. Big plus for perl programmers
 on Mac.
 
+C<Test::Continuous> will auto detect the subset of tests to run.
+For example, say you have two test files C<feature-foo.t> and
+C<feature-bar.t> which test ,and use, your module C<Feature::Foo>
+and C<Feature::Bar> respectively. C<Test::Continuous> can catch
+this static dependency and only run C<feature-foo.t> when C<Feature::Foo>
+is modified, C<feature-bar.t> will only be ran if C<Feature::Bar>
+is modified.
+
+If a C<.t> file is modified, only that test file will be ran.
+
+Dynamic module dependency is more difficult to detect and needs
+further research.
+
 =back
 
 =head1 CONFIGURATION AND ENVIRONMENT
@@ -141,7 +154,8 @@ Test::Continuous requires no configuration files or environment variables.
 
 =head1 DEPENDENCIES
 
-L<App::Prove>, L<Log::Dispatcher>, L<Log::Dispatch::MacGrowl>
+L<App::Prove>, L<Log::Dispatcher>, L<Log::Dispatch::MacGrowl>,
+L<Module::ExtractUse>
 
 =head1 INCOMPATIBILITIES
 
@@ -160,8 +174,6 @@ L<http://rt.cpan.org>.
 =over
 
 =item A good name for executable.
-
-=item Detect and run only a subset of tests instead of running whole test suite everytime.
 
 =item Accept a per-module config file to tweak different parameters to prove command.
 
