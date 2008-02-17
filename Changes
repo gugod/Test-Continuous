@@ -1,5 +1,10 @@
 Revision history for Test-Continuously
 
+0.0.3:
+- [Fix] The growl icon is only working for the first time.
+- Accept test files as arguments
+- Auto detect the subset of tests to run.
+
 0.0.2:
 - Sun Feb 17 00:55:03 CST 2008
 - [Growl] Use different icon for reporting FAIL.

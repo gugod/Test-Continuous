@@ -11,6 +11,9 @@ use App::Prove;
 use File::Find;
 use File::Modified;
 use Cwd;
+use Module::ExtractUse;
+use List::MoreUtils qw(uniq);
+use XXX;
 
 our @EXPORT = qw(&runtests);
 {
@@ -18,36 +21,67 @@ our @EXPORT = qw(&runtests);
     *{App::Prove::_exit} = sub {};
 }
 
-sub _run_once {
-    my $prove = App::Prove->new;
-    $prove->process_args(
-        "--formatter" => "Test::Continuous::Formatter",
-        "-m",
-        "--norc", "--nocolor", "-Q", "-l", "t"
-    );
-    $prove->run;
-}
+my @tests;
+my @changes;
+my @files;
 
 sub _files {
-    my @files;
+    return @files if @files;
     find sub {
         my $filename = $File::Find::name;
         return if ! -f $filename;
         return unless $filename =~ /\.(p[lm]|t)$/ && -f $filename;
         push @files, $filename;
     }, getcwd;
-    return \ @files;
+    return @files;
+}
+
+sub _tests_to_run {
+    my %dep;
+
+    my $p = Module::ExtractUse->new;
+    for my $t ( @tests ) {
+        $p->extract_use($t);
+        for my $used ($p->array) {
+            next unless $used =~ s{::}{/}g;
+            $used .= ".pm";
+            push @{$dep{$used}||=[]}, $t;
+        }
+    }
+
+    my @tests_to_run = uniq sort map {
+        if (/.t$/) {
+            $_;
+        }
+        else {
+            my $changed = $_;
+            map { @{$dep{$_}} } grep { index($changed, $_) >= 0 } keys %dep;
+        }
+    } @changes;
+
+    return @tests_to_run
+}
+
+sub _run_once {
+    my $prove = App::Prove->new;
+    $prove->process_args(
+        "--formatter" => "Test::Continuous::Formatter",
+        "-m", "--norc", "--nocolor", "-l", _tests_to_run
+    );
+    $prove->run;
 }
 
 sub runtests {
-    my $d = File::Modified->new( files => _files );
+    @tests = @ARGV ? @ARGV : <t/*.t>;
+    print "[MSG] Will run continuously test $_\n" for @tests;
+    my $d = File::Modified->new( files => [ _files ] );
     while(1) {
-        my @changes = $d->changed;
+        @changes = $d->changed;
         if ( @changes ) {
             print "[MSG]: $_ was changed.\n" for @changes;
             $d->update();
             sleep 1;
-            _run_once;
+            _run_once( @changes );
         }
     }
 }

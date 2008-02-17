@@ -30,9 +30,6 @@ our $VERSION = "0.0.2";
                     min_level => "debug",
                     app_name => "Test::Continuous",
                     title => "Test Report",
-                    icon_file =>
-                        '/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/' .
-                        (self->{test_failed} ? 'AlertStopIcon.icns' : 'ToolbarInfo.icns'),
                     sticky => 0,
                 ));
         };
@@ -48,11 +45,12 @@ sub _send_notify {
 sub summary {
     my ($aggregate) = args;
 
-    my $str;
-    my $io = IO::String->new($str);
+    my $io = IO::String->new();
     self->stdout($io);
 
     self->SUPER::summary($aggregate);
+
+    my $str = ${$io->string_ref};
 
     $str =~ s/^\s*//s;
     $str =~ s/\s*$//s;
@@ -60,8 +58,13 @@ sub summary {
     shift @lines; shift @lines;
 
     my $summary = join("\n", @lines);
-    if ($summary =~ /FAIL/s) {
-        self->{test_failed} = 1;
+    self->{test_failed} = ($summary =~ /FAIL/ ? 1 : 0);
+
+    if (my $growl = self->_dispatcher->remove("growl")) {
+        $growl->{icon_file} =
+            '/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/' .
+            ( self->{test_failed} ? 'AlertStopIcon.icns' : 'ToolbarInfo.icns' );
+        self->_dispatcher->add($growl);
     }
 
     print "\n" . "-" x 45 . "\n";
