@@ -1,5 +1,8 @@
 Revision history for Test-Continuously
 
+0.0.4:
+- Fix dependency list again. (Grr)
+
 0.0.3:
 - [Fix] The growl icon is only working for the first time.
 - Accept test files as arguments
