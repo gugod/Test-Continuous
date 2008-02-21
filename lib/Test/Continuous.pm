@@ -58,7 +58,9 @@ sub _tests_to_run {
         }
     } @changes;
 
-    return @tests_to_run
+    return @tests if @tests_to_run == 0;
+
+    return @tests_to_run;
 }
 
 sub _run_once {
