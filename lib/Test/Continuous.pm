@@ -4,7 +4,7 @@ package Test::Continuous;
 
 use 5.008;
 
-our $VERSION = '0.0.4';
+our $VERSION = '0.0.5';
 
 use Exporter::Lite;
 use App::Prove;
