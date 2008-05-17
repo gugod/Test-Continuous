@@ -45,6 +45,7 @@ sub _send_notify {
 sub summary {
     my ($aggregate) = args;
     my $summary;
+    my $non_zero_exit_status = 0;
 
     if ($aggregate->all_passed) {
         $summary = "ALL PASSED";
@@ -57,18 +58,26 @@ sub summary {
 
         my @t = $aggregate->descriptions;
         for my $t (@t) {
+            $t =~ /(t\/.*$)/;
+            my $tfile = $1;
             my ($parser) = $aggregate->parsers($t);
-            if ( my @r = $parser->failed() ) {
-                $t =~ /(t\/.*$)/;
-                $summary .= "Failed test(s) in $1: @r\n";
+            if (my @r = $parser->failed()) {
+                $summary .= "Failed test(s) in $tfile: @r\n";
+            }
+
+            if ( my $exit = $parser->exit ) {
+                $summary .= "  Non-zero exit status: $tfile\n";
+                $non_zero_exit_status = 1;
             }
         }
     }
 
     if (my $growl = self->_dispatcher->remove("growl")) {
-        $growl->{icon_file} =
-            '/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/' .
-            ( $aggregate->all_passed ? 'ToolbarInfo.icns' : 'AlertStopIcon.icns' );
+        $growl->{icon_file} = '/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/' .
+            ($non_zero_exit_status
+                 ? 'AlertCautionIcon.icns'
+                 : $aggregate->all_passed
+                 ? 'ToolbarInfo.icns' : 'AlertStopIcon.icns');
         self->_dispatcher->add($growl);
     }
 
