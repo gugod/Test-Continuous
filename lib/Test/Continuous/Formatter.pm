@@ -44,26 +44,31 @@ sub _send_notify {
 
 sub summary {
     my ($aggregate) = args;
+    my $summary;
 
-    my $io = IO::String->new();
-    self->stdout($io);
+    if ($aggregate->all_passed) {
+        $summary = "ALL PASSED";
+    }
+    else {
+        local $, = ",";
+        my $total  = $aggregate->total;
+        my $passed = $aggregate->passed;
+        $summary = "${total} planned, only ${passed} passed.\n";
 
-    self->SUPER::summary($aggregate);
-
-    my $str = ${$io->string_ref};
-
-    $str =~ s/^\s*//s;
-    $str =~ s/\s*$//s;
-    my @lines = split(/\n/, $str);
-    shift @lines; shift @lines;
-
-    my $summary = join("\n", @lines);
-    self->{test_failed} = ($summary =~ /FAIL/ ? 1 : 0);
+        my @t = $aggregate->descriptions;
+        for my $t (@t) {
+            my ($parser) = $aggregate->parsers($t);
+            if ( my @r = $parser->failed() ) {
+                $t =~ /(t\/.*$)/;
+                $summary .= "Failed test(s) in $1: @r\n";
+            }
+        }
+    }
 
     if (my $growl = self->_dispatcher->remove("growl")) {
         $growl->{icon_file} =
             '/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/' .
-            ( self->{test_failed} ? 'AlertStopIcon.icns' : 'ToolbarInfo.icns' );
+            ( $aggregate->all_passed ? 'ToolbarInfo.icns' : 'AlertStopIcon.icns' );
         self->_dispatcher->add($growl);
     }
 

@@ -154,7 +154,7 @@ Test::Continuous requires no configuration files or environment variables.
 
 =head1 DEPENDENCIES
 
-L<App::Prove>, L<Log::Dispatcher>, L<Log::Dispatch::MacGrowl>,
+L<App::Prove>, L<Log::Dispatch>, L<Log::Dispatch::MacGrowl>,
 L<Module::ExtractUse>
 
 =head1 INCOMPATIBILITIES
