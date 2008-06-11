@@ -10,6 +10,7 @@ build_requires  'Test::More'        => '0.42';
 
 requires
     "self" => "0.15",
+    "IO::String" => 0,
     "Module::ExtractUse" => 0,
     "File::Modified" => 0,
     "TAP::Harness" => "3.09",
@@ -18,7 +19,7 @@ requires
 
 features(
     'Notify with Growl' => [
-        -default => 1,
+        -default => ($^O eq 'darwin') ,
         requires("Log::Dispatch::MacGrowl" => 0)
     ]
 );
