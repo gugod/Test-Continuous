@@ -1,7 +1,7 @@
 Revision history for Test-Continuously
 
 0.0.5:
-- Fix the case that it runes the whole t/ directory if there's
+- Fix the case that it runs the whole t/ directory if there's
   no subset of tests to run from dependency list. It should only
   run those tests given in the command line.
 
