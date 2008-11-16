@@ -18,8 +18,8 @@ requires
 
 features(
     'Notify with Growl' => [
-        -default => ($^O eq 'darwin') ,
-        requires("Log::Dispatch::MacGrowl" => 0)
+        -default => ($^O eq 'darwin'),
+        "Log::Dispatch::MacGrowl" => 0
     ]
 );
 
