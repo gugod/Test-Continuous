@@ -51,3 +51,34 @@ sub send_notify {
 
 
 1;
+
+=head1 NAME
+
+Test::Continuous::Notifier - Send notification to different targets.
+
+=head1 SYNOPSIS
+
+    Test::Continuous::Notifier->send_notify($msg, $status)
+
+=head1 DESCRIPTION
+
+This is used only internally.
+
+=head1 METHODS
+
+=over
+
+=item send_notify($msg, [$status])
+
+Must be called as a class method.
+
+C<$msg> is required, and should contain trailing a C<\n> character in
+case the output stream is not auto-flushing.
+
+C<$status> is optional, and should be one of C<"info">, C<"warning">,
+or C<"alert">. The default value is C<"info">.
+
+=back
+
+=cut
+

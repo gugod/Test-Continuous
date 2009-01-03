@@ -4,7 +4,7 @@ package Test::Continuous;
 
 use 5.008;
 
-our $VERSION = '0.0.5';
+our $VERSION = '0.60';
 
 use Exporter::Lite;
 use App::Prove;
@@ -92,10 +92,12 @@ sub _run_once {
 sub _analyze_tap_archive {
     my ($dir, $file, @tests) = @_;
 
+    my $cwd = getcwd;
     chdir($dir);
     my $tar = Archive::Tar->new;
     $tar->read($file, 0);
     $tar->extract();
+    chdir($cwd);
 
     for my $test (@tests) {
         my $file = File::Spec->catfile($dir, $test);

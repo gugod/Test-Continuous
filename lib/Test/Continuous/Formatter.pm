@@ -4,7 +4,6 @@ use warnings;
 package Test::Continuous::Formatter;
 use base 'TAP::Formatter::Console';
 use Test::Continuous::Notifier;
-use IO::String;
 use self;
 
 use 5.008;
@@ -40,7 +39,6 @@ sub summary {
         }
     }
 
-    print "\n" . "-" x 45 . "\n";
     for (split(/\n(?!  )/, $summary )) {
         s/ +/ /gs;
         Test::Continuous::Notifier->send_notify(

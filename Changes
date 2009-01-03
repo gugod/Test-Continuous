@@ -1,5 +1,8 @@
 Revision history for Test-Continuously
 
+0.60:
+- Report comments in TAP output. So diag or dubious test file can be seen.
+
 0.0.5:
 - Fix the case that it runs the whole t/ directory if there's
   no subset of tests to run from dependency list. It should only
