@@ -1,6 +1,7 @@
-steps = FindVersion, ChangeVersion, CheckChangeLog, DistTest, Commit, Tag, MakeDist, UploadCPAN
+steps = FindVersion, ChangeVersion, CheckChangeLog, DistTest, Commit, Tag, MakeDist, UploadCPAN, Twitter
 
-svk.tagpattern = //mirror/handlino-pub/perl5/tags/Test-Continuous-%v
+git.tagpattern = release-%v
 
 CheckChangeLog.files = Changes
 
+twitter.config = /Users/gugod/.twitterrc
