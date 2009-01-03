@@ -3,44 +3,12 @@ use warnings;
 
 package Test::Continuous::Formatter;
 use base 'TAP::Formatter::Console';
-
+use Test::Continuous::Notifier;
 use IO::String;
 use self;
-use Log::Dispatch;
-use Log::Dispatch::Screen;
 
 use 5.008;
 our $VERSION = "0.0.2";
-
-{
-    my $dispatcher;
-    sub _dispatcher {
-        return $dispatcher if $dispatcher;
-
-        $dispatcher = Log::Dispatch->new;
-        $dispatcher->add(
-            Log::Dispatch::Screen->new(name => "screen", min_level => "debug")
-        );
-
-        eval {
-            require Log::Dispatch::MacGrowl;
-            $dispatcher->add(
-                Log::Dispatch::MacGrowl->new(
-                    name => "growl",
-                    min_level => "debug",
-                    app_name => "Test::Continuous",
-                    title => "Test Report",
-                    sticky => 0,
-                ));
-        };
-
-        return $dispatcher;
-    }
-}
-
-sub _send_notify {
-    self->_dispatcher->notice(args[0]);
-}
 
 sub summary {
     my ($aggregate) = args;
@@ -48,7 +16,7 @@ sub summary {
     my $non_zero_exit_status = 0;
 
     if ($aggregate->all_passed) {
-        $summary = "ALL PASSED";
+        $summary = "ALL PASSED\n";
     }
     else {
         local $, = ",";
@@ -72,19 +40,13 @@ sub summary {
         }
     }
 
-    if (my $growl = self->_dispatcher->remove("growl")) {
-        $growl->{icon_file} = '/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/' .
-            ($non_zero_exit_status
-                 ? 'AlertCautionIcon.icns'
-                 : $aggregate->all_passed
-                 ? 'ToolbarInfo.icns' : 'AlertStopIcon.icns');
-        self->_dispatcher->add($growl);
-    }
-
     print "\n" . "-" x 45 . "\n";
     for (split(/\n(?!  )/, $summary )) {
         s/ +/ /gs;
-        self->_send_notify("$_\n");
+        Test::Continuous::Notifier->send_notify(
+            "$_\n",
+            $non_zero_exit_status ? 'alert' : $aggregate->all_passed ? 'info' : 'warning'
+        );
     }
 }
 

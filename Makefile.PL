@@ -9,6 +9,7 @@ abstract 'Run your tests suite continusouly when developing.';
 build_requires  'Test::More'        => '0.42';
 
 requires
+    "IO::File" => 0,
     "IO::String" => 0,
     "Module::ExtractUse" => 0,
     "File::Modified" => 0,

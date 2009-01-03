@@ -1,24 +1,19 @@
 #!/usr/bin/env perl -w
 use strict;
+use lib 't';
 use Test::More tests => 1;
 
 use Test::Continuous;
-use Test::Continuous::Formatter;
+use Test::Continuous::Notifier;
 
-my @notified = ();
+our @notified = ();
+
+require 'mock.pl';
+
 {
-    no strict;
     no warnings;
-
     sub Test::Continuous::_tests_to_run { ("t/diag.t") }
-
-    sub Test::Continuous::Formatter::_send_notify {
-        my ($self, $msg) = @_;
-        push @notified, $msg;
-
-    }
 }
-
 
 use Cwd qw(chdir);
 
@@ -29,7 +24,7 @@ is_deeply(
     \@notified,
     [
         "ALL PASSED\n",
-        "t/diag.t: # Send a diag message",
+        "t/diag.t: # Send a diag message\n",
     ]
 );
 

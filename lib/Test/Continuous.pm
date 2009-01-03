@@ -19,7 +19,7 @@ use File::Spec;
 use TAP::Parser;
 use TAP::Parser::Iterator::Stream;
 use Archive::Tar;
-
+use IO::File;
 use Test::Continuous::Formatter;
 
 our @EXPORT = qw(&runtests);
@@ -99,19 +99,23 @@ sub _analyze_tap_archive {
 
     for my $test (@tests) {
         my $file = File::Spec->catfile($dir, $test);
-        open TEST, $file;
+
+        my $fh = IO::File->new;
+        $fh->open("< $file") or next;
+
         my $parser = TAP::Parser->new({
-            stream => TAP::Parser::Iterator::Stream->new(\*TEST)
+            stream => TAP::Parser::Iterator::Stream->new( $fh )
         });
         while (my $result = $parser->next) {
             if ($result->is_comment) {
-                Test::Continuous::Formatter->_send_notify("$test: " . $result->as_string);
+                Test::Continuous::Notifier->send_notify("$test: " . $result->as_string . "\n");
+            }
+            elsif ($result->is_unknown) {
+                Test::Continuous::Notifier->send_notify("$test: " . $result->as_string . "\n", "warning");
             }
         }
-        close TEST;
     }
 
-    # Delete the temp dir
     rmtree($dir);
 }
 
