@@ -2,6 +2,8 @@ Revision history for Test-Continuously
 
 0.60:
 - Report comments in TAP output. So diag or dubious test file can be seen.
+- code refactoring.
+- Finally some meaningful tests for Test-Continuous!
 
 0.0.5:
 - Fix the case that it runs the whole t/ directory if there's
