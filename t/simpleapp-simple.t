@@ -10,6 +10,8 @@ use Cwd qw(chdir);
 {
     no strict;
     no warnings;
+    sub Test::Continuous::_tests_to_run { ("t/simple.t") }
+
     sub Test::Continuous::Formatter::_send_notify {
         my ($self, $notice) = @_;
         like $notice, qr/ALL PASSED/;
@@ -17,7 +19,5 @@ use Cwd qw(chdir);
 }
 
 chdir("t/SimpleApp");
-
-@Test::Continuous::tests = ("t/simple.t");
 
 Test::Continuous::_run_once;

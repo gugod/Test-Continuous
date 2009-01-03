@@ -13,6 +13,14 @@ use File::Modified;
 use Cwd;
 use Module::ExtractUse;
 use List::MoreUtils qw(uniq);
+use File::Temp qw(tempdir tempfile);
+use File::Path qw(rmtree);
+use File::Spec;
+use TAP::Parser;
+use TAP::Parser::Iterator::Stream;
+use Archive::Tar;
+
+use Test::Continuous::Formatter;
 
 our @EXPORT = qw(&runtests);
 {
@@ -64,12 +72,47 @@ sub _tests_to_run {
 }
 
 sub _run_once {
+    my $dir = tempdir;
+    my $file = $dir . "/$$.tar";
+    my @tests = _tests_to_run;
+
     my $prove = App::Prove->new;
     $prove->process_args(
         "--formatter" => "Test::Continuous::Formatter",
-        "-m", "--norc", "--nocolor", "-l", _tests_to_run
+        "--archive" => $file,
+        "-Q",
+        "-m",
+        "--norc", "--nocolor", "-b", "-l", @tests
     );
     $prove->run;
+
+    _analyze_tap_archive($dir, $file, @tests);
+}
+
+sub _analyze_tap_archive {
+    my ($dir, $file, @tests) = @_;
+
+    chdir($dir);
+    my $tar = Archive::Tar->new;
+    $tar->read($file, 0);
+    $tar->extract();
+
+    for my $test (@tests) {
+        my $file = File::Spec->catfile($dir, $test);
+        open TEST, $file;
+        my $parser = TAP::Parser->new({
+            stream => TAP::Parser::Iterator::Stream->new(\*TEST)
+        });
+        while (my $result = $parser->next) {
+            if ($result->is_comment) {
+                Test::Continuous::Formatter->_send_notify("$test: " . $result->as_string);
+            }
+        }
+        close TEST;
+    }
+
+    # Delete the temp dir
+    rmtree($dir);
 }
 
 sub runtests {
