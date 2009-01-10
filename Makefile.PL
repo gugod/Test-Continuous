@@ -29,6 +29,9 @@ features(
     ]
 );
 
+tests 't/*.t';
+author_tests 'xt/*.t';
+
 auto_install;
 
 WriteAll;
