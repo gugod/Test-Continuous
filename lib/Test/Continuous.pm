@@ -108,14 +108,20 @@ sub _analyze_tap_archive {
         my $parser = TAP::Parser->new({
             stream => TAP::Parser::Iterator::Stream->new( $fh )
         });
+
+        my @warning = ("$test: ");
+        my @comment = ("$test: ");
         while (my $result = $parser->next) {
             if ($result->is_comment) {
-                Test::Continuous::Notifier->send_notify("$test: " . $result->as_string . "\n");
+                push @comment, $result->as_string;
             }
             elsif ($result->is_unknown) {
-                Test::Continuous::Notifier->send_notify("$test: " . $result->as_string . "\n", "warning");
+                push @warning, $result->as_string;
             }
         }
+
+        Test::Continuous::Notifier->send_notify(join("\n", @warning), "warning");
+        Test::Continuous::Notifier->send_notify(join("\n", @comment));
     }
 
     rmtree($dir);
