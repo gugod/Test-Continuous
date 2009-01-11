@@ -109,8 +109,8 @@ sub _analyze_tap_archive {
             stream => TAP::Parser::Iterator::Stream->new( $fh )
         });
 
-        my @warning = ("$test: ");
-        my @comment = ("$test: ");
+        my @warning = ();
+        my @comment = ();
         while (my $result = $parser->next) {
             if ($result->is_comment) {
                 push @comment, $result->as_string;
@@ -120,8 +120,12 @@ sub _analyze_tap_archive {
             }
         }
 
-        Test::Continuous::Notifier->send_notify(join("\n", @warning), "warning");
-        Test::Continuous::Notifier->send_notify(join("\n", @comment));
+        if (@warning) {
+            Test::Continuous::Notifier->send_notify(join("\n", "$test:", @warning), "warning");
+        }
+        if (@comment) {
+            Test::Continuous::Notifier->send_notify(join("\n", "$test:", @comment));
+        }
     }
 
     rmtree($dir);
