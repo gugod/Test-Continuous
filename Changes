@@ -1,5 +1,8 @@
 Revision history for Test-Continuously
 
+0.62:
+- Fix dependencies
+
 0.61:
 - Make runtests function delegate unused @ARGV to App::Prove
 

@@ -5,3 +5,4 @@ git.tagpattern = release-%v
 CheckChangeLog.files = Changes
 
 twitter.config = /Users/gugod/.twitterrc
+

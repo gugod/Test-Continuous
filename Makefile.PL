@@ -11,15 +11,16 @@ build_requires  'Test::More'        => '0.42';
 requires(
     "App::Prove"         => "3.14",
     "TAP::Harness"       => "3.14",
-    "Archive::Tar"       => 0,
-    "File::Modified"     => 0,
-    "File::Spec"         => 0,
-    "File::Spec"         => 0,
-    "File::Temp"         => 0,
-    "IO::File"           => 0,
-    "Log::Dispatch"      => 0,
-    "Module::ExtractUse" => 0,
-    "TAP::Parser"        => 0,
+    "TAP::Harness::Archive" => "0.12",
+    "Exporter::Lite"     => 0.02,
+    "Archive::Tar"       => 1.42,
+    "File::Modified"     => 0.07,
+    "File::Spec"         => 3.29,
+    "File::Temp"         => 0.21,
+    "IO::File"           => 1.14,
+    "Log::Dispatch"      => 2.22,
+    "Module::ExtractUse" => 0.23,
+    "TAP::Parser"        => 3.14,
 );
 
 features(
