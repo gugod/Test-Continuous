@@ -24,7 +24,7 @@ is_deeply(
     \@notified,
     [
         "ALL PASSED\n",
-        "t/diag.t: # Send a diag message\n",
+        "t/diag.t:\n# Send a diag message",
     ]
 );
 

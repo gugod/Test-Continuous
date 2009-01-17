@@ -24,7 +24,7 @@ is_deeply(
     \@notified,
     [
         "0 planned, only 0 passed.\n Non-zero exit status: t/dubious\n",
-        "t/dubious.t: Can't find string terminator \"'\" anywhere before EOF at t/dubious.t line 7.\n",
-        "t/dubious.t: # Looks like your test exited with 255 before it could output anything.\n",
+        "t/dubious.t:\nCan't find string terminator \"'\" anywhere before EOF at t/dubious.t line 7.",
+        "t/dubious.t:\n# Looks like your test exited with 255 before it could output anything.",
     ]
 );
