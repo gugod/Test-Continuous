@@ -1,10 +1,11 @@
-use warnings;
 use strict;
+use warnings;
+
 package Test::Continuous;
 
 use 5.008;
 
-our $VERSION = '0.60';
+our $VERSION = '0.61';
 
 use Exporter::Lite;
 use App::Prove;
@@ -28,6 +29,7 @@ our @EXPORT = qw(&runtests);
     *{App::Prove::_exit} = sub {};
 }
 
+my @prove_args;
 my @tests;
 my @changes;
 my @files;
@@ -80,9 +82,12 @@ sub _run_once {
     $prove->process_args(
         "--formatter" => "Test::Continuous::Formatter",
         "--archive" => $file,
-        "-Q",
         "-m",
-        "--norc", "--nocolor", "-b", "-l", @tests
+        "-b",
+        "-l",
+        "--norc",
+        @prove_args,
+        @tests
     );
     $prove->run;
 
@@ -132,7 +137,16 @@ sub _analyze_tap_archive {
 }
 
 sub runtests {
-    @tests = @ARGV ? @ARGV : <t/*.t>;
+    if (@ARGV) {
+        # print "ARGV: " . join ",",@ARGV, "\n";
+        while (-f $ARGV[-1]) {
+            push @tests, pop @ARGV;
+        }
+        @prove_args = @ARGV;
+    } else {
+        @tests = <t/*.t>;
+    }
+
     print "[MSG] Will run continuously test $_\n" for @tests;
     my $d = File::Modified->new( files => [ _files ] );
     while(1) {
@@ -155,12 +169,18 @@ Test::Continuous - Run your tests suite continusouly when developing.
 
 =head1 VERSION
 
-This document describes Test::Continuous version 0.0.4
+This document describes Test::Continuous version 0.61
 
 =head1 SYNOPSIS
 
+Very simple usage:
+
     % cd MyModule/
     % perl -MTest::Continuous -e runtests
+
+If you want to provide prove arguments:
+
+    % perl -MTest::Continuous -e runtests -- --verbose --shuffle
 
 =head1 DESCRIPTION
 

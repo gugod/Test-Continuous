@@ -1,5 +1,8 @@
 Revision history for Test-Continuously
 
+0.61:
+- Make runtests function delegate unused @ARGV to App::Prove
+
 0.60:
 - Report comments in TAP output. So diag or dubious test file can be seen.
 - code refactoring.
