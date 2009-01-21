@@ -20,6 +20,7 @@ requires(
     "Log::Dispatch"      => 0,
     "Module::ExtractUse" => 0,
     "TAP::Parser"        => 0,
+    "self"               => 0,
 );
 
 features(
