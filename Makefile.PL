@@ -21,6 +21,7 @@ requires(
     "Log::Dispatch"      => 2.22,
     "Module::ExtractUse" => 0.23,
     "TAP::Parser"        => 3.14,
+    "self"               => 0,
 );
 
 features(
