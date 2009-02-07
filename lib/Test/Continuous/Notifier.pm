@@ -17,10 +17,10 @@ use self;
         );
 
         eval {
-            require Log::Dispatch::MacGrowl;
+            require Log::Dispatch::DesktopNotification;
             $dispatcher->add(
-                Log::Dispatch::MacGrowl->new(
-                    name => "growl",
+                Log::Dispatch::DesktopNotification->new(
+                    name => "continuous_notify",
                     min_level => "debug",
                     app_name => "Test::Continuous",
                     title => "Test Report",
@@ -41,12 +41,12 @@ my %status_icon = (
 sub send_notify {
     my ($text, $status) = args;
     $status ||= 'info';
-    if (my $growl = self->_dispatcher->remove("growl")) {
-        $growl->{icon_file} = '/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/' .
+    if (my $notify = self->_dispatcher->remove("continuous_notify")) {
+        $notify->{icon_file} = '/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/' .
             ($status_icon{$status} || 'ToolbarInfo.icns');
-        self->_dispatcher->add($growl);
+        self->_dispatcher->add($notify);
     }
-    self->_dispatcher->notice($text);
+    self->_dispatcher->$status($text);
 }
 
 

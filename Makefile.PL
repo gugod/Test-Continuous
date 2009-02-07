@@ -25,9 +25,9 @@ requires(
 );
 
 features(
-    'Notify with Growl' => [
-        -default => ($^O eq 'darwin'),
-        "Log::Dispatch::MacGrowl" => 0
+    'Graphical notifications' => [
+        -default => 1,
+        "Log::Dispatch::DesktopNotification" => 0
     ]
 );
 
