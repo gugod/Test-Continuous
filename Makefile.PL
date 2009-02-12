@@ -18,6 +18,7 @@ requires(
     "File::Spec"         => 3.29,
     "File::Temp"         => 0.21,
     "IO::File"           => 1.14,
+    "List::MoreUtils"    => 0,
     "Log::Dispatch"      => 2.22,
     "Module::ExtractUse" => 0.23,
     "TAP::Parser"        => 3.14,
