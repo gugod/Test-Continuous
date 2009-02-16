@@ -140,7 +140,7 @@ sub _analyze_tap_archive {
 sub runtests {
     if (@ARGV) {
         # print "ARGV: " . join ",",@ARGV, "\n";
-        while (-f $ARGV[-1]) {
+        while ($ARGV[-1] && -f $ARGV[-1]) {
             push @tests, pop @ARGV;
         }
         @prove_args = @ARGV;
