@@ -38,8 +38,9 @@ sub _files {
     return @files if @files;
     find sub {
         my $filename = $File::Find::name;
+
         return if ! -f $filename;
-        return unless $filename =~ /\.(p[lm]|t)$/ && -f $filename;
+        return unless $filename =~ /\.(p[lm]|t)$/;
         push @files, $filename;
     }, getcwd;
     return @files;
