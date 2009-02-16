@@ -145,7 +145,12 @@ sub runtests {
         }
         @prove_args = @ARGV;
     } else {
-        @tests = <t/*.t>;
+
+        find sub {
+            my $filename = $File::Find::name;
+            return unless $filename =~ /\.t$/ && -f $filename;
+            push @tests, $filename;
+        }, getcwd;
     }
 
     print "[MSG] Will run continuously test $_\n" for @tests;
