@@ -1,38 +1,107 @@
-Test-Continuously version 0.0.1
+NAME
+    Test::Continuous - Run your tests suite continusouly when developing.
 
-This module is inspired by "Continuous Testing"
+VERSION
+    This document describes Test::Continuous version 0.61
 
-    http://groups.csail.mit.edu/pag/continuoustesting/
+SYNOPSIS
+    Very simple usage:
 
-Perl module developers can use this module to keep testing their work
-at the same moment they are coding. It keeps polling if any code is
-changed, and run tests if so.
+        % cd MyModule/
+        % perl -MTest::Continuous -e runtests
 
-INSTALLATION
+    If you want to provide prove arguments:
 
-To install this module, run the following commands:
+        % perl -MTest::Continuous -e runtests -- --verbose --shuffle
 
-    perl Makefile.PL
-    make
-    make test
-    make install
+DESCRIPTION
+    *Continuous Testing* is a concept and tool to re-run software tests as
+    soon as the developer saved the source code.
 
-USAGE
+    See also <http://groups.csail.mit.edu/pag/continuoustesting/> for the
+    original implementation of Continuous Testing as a Eclipse plugin.
 
-To use this, run this at your module directory (where a t/ lives):
+    See also Zentest <http://www.zenspider.com/ZSS/Products/ZenTest/> for
+    the same concept of implementation in Ruby's world.
 
-    perl -MTest::Continuously -e runtests
+INTERFACE
+    runtests
+        This is the only function that you should be calling, directly from
+        command line:
 
-Then just switch to your editor and start coding. You shall be
-notified when a round of test is finished.
+            perl -MTest::Continuous -e runtests
+
+        It'll start monitoring the mtime of all files under current working
+        directy. If there's any update, it'll run your module test under t/
+        directory with App::Prove.
+
+        Test result are displayed on terminal. Also dispatched to Growl if
+        "Log::Dispatch::MacGrowl" is installed. Big plus for perl
+        programmers on Mac.
+
+        "Test::Continuous" will auto detect the subset of tests to run. For
+        example, say you have two test files "feature-foo.t" and
+        "feature-bar.t" which test ,and use, your module "Feature::Foo" and
+        "Feature::Bar" respectively. "Test::Continuous" can catch this
+        static dependency and only run "feature-foo.t" when "Feature::Foo"
+        is modified, "feature-bar.t" will only be ran if "Feature::Bar" is
+        modified.
+
+        If a ".t" file is modified, only that test file will be ran.
+
+        Dynamic module dependency is more difficult to detect and needs
+        further research.
+
+CONFIGURATION AND ENVIRONMENT
+    Test::Continuous requires no configuration files or environment
+    variables.
 
 DEPENDENCIES
+    App::Prove, Log::Dispatch, Log::Dispatch::MacGrowl, Module::ExtractUse
 
-Mac::Growl
+INCOMPATIBILITIES
+    None reported.
 
-COPYRIGHT AND LICENCE
+BUGS AND LIMITATIONS
+    No bugs have been reported.
 
-Copyright (C) 2008, Kang-min Liu
+    Please report any bugs or feature requests to
+    "bug-test-continuous@rt.cpan.org", or through the web interface at
+    <http://rt.cpan.org>.
 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
+TODO
+    A good name for executable.
+    Accept a per-module config file to tweak different parameters to prove
+    command.
+
+AUTHOR
+    Kang-min Liu "<gugod@gugod.org>"
+
+LICENCE AND COPYRIGHT
+    Copyright (c) 2008, Kang-min Liu "<gugod@gugod.org>".
+
+    This module is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself. See perlartistic.
+
+DISCLAIMER OF WARRANTY
+    BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+    FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN
+    OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
+    PROVIDE THE SOFTWARE "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
+    EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
+    ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE IS WITH
+    YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL
+    NECESSARY SERVICING, REPAIR, OR CORRECTION.
+
+    IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+    WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+    REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE LIABLE
+    TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL, OR
+    CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE
+    SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
+    RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
+    FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
+    SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+    DAMAGES.
+

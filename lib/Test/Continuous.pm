@@ -38,8 +38,9 @@ sub _files {
     return @files if @files;
     find sub {
         my $filename = $File::Find::name;
+
         return if ! -f $filename;
-        return unless $filename =~ /\.(p[lm]|t)$/ && -f $filename;
+        return unless $filename =~ /\.(p[lm]|t)$/;
         push @files, $filename;
     }, getcwd;
     return @files;
@@ -139,12 +140,17 @@ sub _analyze_tap_archive {
 sub runtests {
     if (@ARGV) {
         # print "ARGV: " . join ",",@ARGV, "\n";
-        while (-f $ARGV[-1]) {
+        while ($ARGV[-1] && -f $ARGV[-1]) {
             push @tests, pop @ARGV;
         }
         @prove_args = @ARGV;
     } else {
-        @tests = <t/*.t>;
+
+        find sub {
+            my $filename = $File::Find::name;
+            return unless $filename =~ /\.t$/ && -f $filename;
+            push @tests, $filename;
+        }, getcwd;
     }
 
     print "[MSG] Will run continuously test $_\n" for @tests;
