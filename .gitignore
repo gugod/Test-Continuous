@@ -9,3 +9,7 @@ cover_db/
 covered/
 inc/
 pm_to_blib
+
+*.tar.gz
+Test-Continuous-*
+
