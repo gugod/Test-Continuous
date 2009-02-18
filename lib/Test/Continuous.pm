@@ -271,7 +271,7 @@ Kang-min Liu  C<< <gugod@gugod.org> >>
 
 =head1 LICENCE AND COPYRIGHT
 
-Copyright (c) 2008, Kang-min Liu C<< <gugod@gugod.org> >>.
+Copyright (c) 2008,2009 Kang-min Liu C<< <gugod@gugod.org> >>.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself. See L<perlartistic>.
