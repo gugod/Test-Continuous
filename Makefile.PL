@@ -9,8 +9,8 @@ abstract 'Run your tests suite continusouly when developing.';
 build_requires  'Test::More'        => '0.42';
 
 requires(
-    "App::Prove"         => "3.14",
-    "TAP::Harness"       => "3.14",
+    "App::Prove"         => "3.15",
+    "TAP::Harness"       => "3.15",
     "TAP::Harness::Archive" => "0.12",
     "Exporter::Lite"     => 0.02,
     "Archive::Tar"       => 1.42,
