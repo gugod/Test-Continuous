@@ -14,13 +14,6 @@ use File::Modified;
 use Cwd;
 use Module::ExtractUse;
 use List::MoreUtils qw(uniq);
-use File::Temp qw(tempdir tempfile);
-use File::Path qw(rmtree);
-use File::Spec;
-use TAP::Parser;
-use TAP::Parser::Iterator::Stream;
-use Archive::Tar;
-use IO::File;
 use Test::Continuous::Formatter;
 
 our @EXPORT = qw(&runtests);
@@ -75,8 +68,6 @@ sub _tests_to_run {
 }
 
 sub _run_once {
-    my $dir = tempdir;
-    my $file = $dir . "/$$.tar";
     my @tests = _tests_to_run;
 
     my $prove = App::Prove->new;
