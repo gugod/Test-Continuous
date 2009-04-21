@@ -1,5 +1,12 @@
 Revision history for Test-Continuously
 
+0.63:
+- refactor of previous release such that it does not
+  require an TAP Archive class to work.
+  This is better in general since some harness classes
+  do not work with archive easily.
+- therefore, remove a few modules from the dependency list
+
 0.62:
 - Fix dependencies
 
