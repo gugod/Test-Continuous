@@ -12,7 +12,7 @@ SYNOPSIS
 
     If you want to provide prove arguments:
 
-        % perl -MTest::Continuous -e runtests -- --verbose --shuffle
+        % perl -MTest::Continuous -e runtests -- --shuffle
 
 DESCRIPTION
     *Continuous Testing* is a concept and tool to re-run software tests as

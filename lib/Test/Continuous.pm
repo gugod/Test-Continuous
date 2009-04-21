@@ -5,7 +5,7 @@ package Test::Continuous;
 
 use 5.008;
 
-our $VERSION = '0.62';
+our $VERSION = '0.63';
 
 use Exporter::Lite;
 use App::Prove;
@@ -123,7 +123,7 @@ Test::Continuous - Run your tests suite continusouly when developing.
 
 =head1 VERSION
 
-This document describes Test::Continuous version 0.61
+This document describes Test::Continuous version 0.63
 
 =head1 SYNOPSIS
 
@@ -134,7 +134,7 @@ Very simple usage:
 
 If you want to provide prove arguments:
 
-    % perl -MTest::Continuous -e runtests -- --verbose --shuffle
+    % perl -MTest::Continuous -e runtests -- --shuffle
 
 =head1 DESCRIPTION
 
