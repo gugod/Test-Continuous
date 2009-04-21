@@ -2,15 +2,36 @@ use strict;
 use warnings;
 
 package Test::Continuous::Formatter;
-use base 'TAP::Formatter::Console';
+use base 'TAP::Formatter::Base';
 use Test::Continuous::Notifier;
+use Test::Continuous::Formatter::Session;
 use self;
 
 use 5.008;
+
 our $VERSION = "0.0.2";
 
+sub open_test {
+    my ($test, $parser ) = @args;
+
+    my $session = Test::Continuous::Formatter::Session->new(
+        {
+            name      => $test,
+            formatter => $self,
+            parser    => $parser
+        }
+    );
+
+    $self->{__tc_output} = "";
+
+    $session->header;
+
+    return $session;
+}
+
 sub summary {
-    my ($aggregate) = args;
+    my ($aggregate) = @args;
+
     my $summary;
     my $non_zero_exit_status = 0;
 
@@ -46,9 +67,60 @@ sub summary {
             $non_zero_exit_status ? 'alert' : $aggregate->all_passed ? 'info' : 'warning'
         );
     }
+
+    $self->_analyze_test_output;
+}
+
+sub _output {
+    my $out  = join('', @args);
+    $self->{__tc_output} .= "$out\n";
+}
+
+sub _analyze_test_output {
+    my(@comment, @warning);
+
+    my $output = $self->{__tc_output};
+
+    return if $output =~ /^\s+$/s;
+
+    my @lines = split(/\n/, $output);
+    my $description = shift @lines;
+
+    $description =~ m/^(.+)\s\.\./g;
+    my $test_file = $1;
+
+    my $parser = TAP::Parser->new({
+        tap => join("\n", @lines)
+    });
+
+    while (my $result = $parser->next) {
+
+        if ( $result->is_unknown ) {
+            my $str = $result->as_string;
+            push @warning, $str
+                unless $str =~ /^(Dubious|Failed|\s*$)/;
+        }
+        elsif ( $result->is_comment ) {
+            push @comment, $result->as_string;
+        }
+    }
+
+    if (@warning) {
+        Test::Continuous::Notifier->send_notify(
+            join("\n", "$test_file:", @warning),
+            "warning"
+        );
+    }
+    if (@comment) {
+        Test::Continuous::Notifier->send_notify(
+            join("\n", "$test_file:",@comment)
+        );
+    }
 }
 
 1;
+
+__END__
 
 =head1 NAME
 

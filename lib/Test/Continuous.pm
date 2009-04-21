@@ -81,8 +81,6 @@ sub _run_once {
 
     my $prove = App::Prove->new;
     $prove->process_args(
-        "--formatter" => "Test::Continuous::Formatter",
-        "--archive" => $file,
         "-m",
         "-b",
         "-l",
@@ -90,51 +88,10 @@ sub _run_once {
         @prove_args,
         @tests
     );
+    $prove->formatter("Test::Continuous::Formatter");
+    $prove->verbose(1);
+    $prove->merge(1);
     $prove->run;
-
-    _analyze_tap_archive($dir, $file, @tests);
-}
-
-sub _analyze_tap_archive {
-    my ($dir, $file, @tests) = @_;
-
-    my $cwd = getcwd;
-    chdir($dir);
-    my $tar = Archive::Tar->new;
-    $tar->read($file, 0);
-    $tar->extract();
-    chdir($cwd);
-
-    for my $test (@tests) {
-        my $file = File::Spec->catfile($dir, $test);
-
-        my $fh = IO::File->new;
-        $fh->open("< $file") or next;
-
-        my $parser = TAP::Parser->new({
-            stream => TAP::Parser::Iterator::Stream->new( $fh )
-        });
-
-        my @warning = ();
-        my @comment = ();
-        while (my $result = $parser->next) {
-            if ($result->is_comment) {
-                push @comment, $result->as_string;
-            }
-            elsif ($result->is_unknown) {
-                push @warning, $result->as_string;
-            }
-        }
-
-        if (@warning) {
-            Test::Continuous::Notifier->send_notify(join("\n", "$test:", @warning), "warning");
-        }
-        if (@comment) {
-            Test::Continuous::Notifier->send_notify(join("\n", "$test:", @comment));
-        }
-    }
-
-    rmtree($dir);
 }
 
 sub runtests {
