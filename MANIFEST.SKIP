@@ -20,3 +20,5 @@
 ^\.gitignore$
 \.git/
 ^cover_db/
+\.sd/
+
