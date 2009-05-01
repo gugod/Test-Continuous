@@ -6,6 +6,8 @@ all_from 'lib/Test/Continuous.pm';
 
 abstract 'Run your tests suite continusouly when developing.';
 
+repository 'http://github.com/gugod/test-continuous/tree';
+
 build_requires  'Test::More'        => '0.42';
 
 requires(
@@ -30,6 +32,7 @@ features(
 tests 't/*.t';
 author_tests 'xt/*.t';
 
+auto_install;
 install_script 'bin/autoprove';
 
 WriteAll;
