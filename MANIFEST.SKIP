@@ -21,4 +21,4 @@
 \.git/
 ^cover_db/
 \.sd/
-
+^Test-Continuous-*
