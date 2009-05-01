@@ -1,7 +1,8 @@
-Revision history for Test-Continuously
+Revision history for Test-Continuous
 
 0.64:
 - now ship with an "autoprove" program as the runner.
+- documentation updates
 
 0.63:
 - refactor of previous release such that it does not
