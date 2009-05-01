@@ -5,8 +5,8 @@ package Test::Continuous;
 
 use 5.008;
 
-our $VERSION = '0.63';
-
+our $VERSION = '0.64';
+    
 use Exporter::Lite;
 use App::Prove;
 use File::Find;
@@ -123,18 +123,18 @@ Test::Continuous - Run your tests suite continusouly when developing.
 
 =head1 VERSION
 
-This document describes Test::Continuous version 0.63
+This document describes Test::Continuous version 0.64
 
 =head1 SYNOPSIS
 
 Very simple usage:
 
     % cd MyModule/
-    % perl -MTest::Continuous -e runtests
+    % autoprove
 
 If you want to provide prove arguments:
 
-    % perl -MTest::Continuous -e runtests -- --shuffle
+    % autoprove --shuffle
 
 =head1 DESCRIPTION
 
@@ -153,18 +153,22 @@ the same concept of implementation in Ruby's world.
 
 =item runtests
 
-This is the only function that you should be calling, directly
-from command line:
+This function starts monitoring the mtime of all files under current
+working directy. If there's any update, it'll run your module test
+under t/ directory with L<App::Prove>.
+
+You could call it from command line like this:
 
     perl -MTest::Continuous -e runtests
 
-It'll start monitoring the mtime of all files under current working
-directy. If there's any update, it'll run your module test under t/
-directory with L<App::Prove>.
+However, it's recommended to use L<autoprove> program shipped with
+this distribution to do this instead.
 
-Test result are displayed on terminal. Also dispatched to Growl if
-C<Log::Dispatch::MacGrowl> is installed. Big plus for perl programmers
-on Mac.
+Test results are displayed on terminal.  If
+L<Log::Dispatch::DesktopNotification> is installed, test results will
+also be notified through that channel. If running on Mac, it'll be
+Growl, if it's on Linux desktop, it's done with
+L<Log::Dispatch::Gtk2::Notify>.
 
 C<Test::Continuous> will auto detect the subset of tests to run.
 For example, say you have two test files C<feature-foo.t> and
@@ -176,41 +180,30 @@ is modified.
 
 If a C<.t> file is modified, only that test file will be ran.
 
-Dynamic module dependency is more difficult to detect and needs
-further research.
-
 =back
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
 Test::Continuous requires no configuration files or environment variables.
 
+Although it's based on L<App::Prove>, your C<.proverc> is not loaded.
+
 =head1 DEPENDENCIES
 
-L<App::Prove>, L<Log::Dispatch>, L<Log::Dispatch::MacGrowl>,
+L<App::Prove>, L<Log::Dispatch>, L<Log::Dispatch::DesktopNotification>,
 L<Module::ExtractUse>
 
 =head1 INCOMPATIBILITIES
 
-None reported.
+It might not be compatible with all Test::Harness::* classes. Testing with
+remote harness classes are bascially working, but has some glitches. Helps are
+appreciated.
 
 =head1 BUGS AND LIMITATIONS
-
-No bugs have been reported.
 
 Please report any bugs or feature requests to
 C<bug-test-continuous@rt.cpan.org>, or through the web interface at
 L<http://rt.cpan.org>.
-
-=head1 TODO
-
-=over
-
-=item A good name for executable.
-
-=item Accept a per-module config file to tweak different parameters to prove command.
-
-=back
 
 =head1 AUTHOR
 
