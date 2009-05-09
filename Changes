@@ -1,5 +1,8 @@
 Revision history for Test-Continuous
 
+0.65:
+- Support TAP::Harness::Remote
+
 0.64:
 - now ship with an "autoprove" program as the runner.
 - documentation updates
