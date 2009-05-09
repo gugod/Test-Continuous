@@ -29,13 +29,16 @@ my @files;
 
 sub _files {
     return @files if @files;
+    my $cwd = getcwd;
     find sub {
         my $filename = $File::Find::name;
-
         return if ! -f $filename;
         return unless $filename =~ /\.(p[lm]|t)$/;
+
+        $filename =~ s[^$cwd][];
+
         push @files, $filename;
-    }, getcwd;
+    }, $cwd;
     return @files;
 }
 
