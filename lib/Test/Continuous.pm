@@ -35,8 +35,6 @@ sub _files {
         return if ! -f $filename;
         return unless $filename =~ /\.(p[lm]|t)$/;
 
-        $filename =~ s[^$cwd][];
-
         push @files, $filename;
     }, $cwd;
     return @files;
@@ -55,8 +53,11 @@ sub _tests_to_run {
         }
     }
 
-    my @tests_to_run = uniq sort map {
-        if (/.t$/) {
+    my $cwd = getcwd . "/";
+    my @tests_to_run = map {
+        s/^$cwd//; $_;
+    } uniq sort map {
+        if (/\.t$/) {
             $_;
         }
         else {

@@ -1,5 +1,8 @@
 Revision history for Test-Continuous
 
+0.66:
+- fix the massive warning coming from File::Modified.
+
 0.65:
 - Support TAP::Harness::Remote
 
