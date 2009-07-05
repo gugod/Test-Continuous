@@ -10,11 +10,11 @@ our $VERSION = '0.66';
 use Exporter::Lite;
 use App::Prove;
 use File::Find;
-use File::Modified;
 use Cwd;
 use Module::ExtractUse;
 use List::MoreUtils qw(uniq);
 use Test::Continuous::Formatter;
+use File::ChangeNotify;
 
 our @EXPORT = qw(&runtests);
 {
@@ -26,19 +26,6 @@ my @prove_args;
 my @tests;
 my @changes;
 my @files;
-
-sub _files {
-    return @files if @files;
-    my $cwd = getcwd;
-    find sub {
-        my $filename = $File::Find::name;
-        return if ! -f $filename;
-        return unless $filename =~ /\.(p[lm]|t)$/;
-
-        push @files, $filename;
-    }, $cwd;
-    return @files;
-}
 
 sub _tests_to_run {
     my %dep;
@@ -64,6 +51,8 @@ sub _tests_to_run {
             my $changed = $_;
             map { @{$dep{$_}} } grep { index($changed, $_) >= 0 } keys %dep;
         }
+    } map {
+        $_->path;
     } @changes;
 
     return @tests if @tests_to_run == 0;
@@ -106,13 +95,15 @@ sub runtests {
     }
 
     print "[MSG] Will run continuously test $_\n" for @tests;
-    my $d = File::Modified->new( files => [ _files ] );
-    while(1) {
-        if ( @changes = $d->changed ) {
-            print "[MSG]: $_ was changed.\n" for @changes;
-            $d->update();
-            _run_once;
-        }
+
+    my $watcher = File::ChangeNotify->instantiate_watcher( 
+        directories => [ getcwd ],
+        filter      => qr/\.(p[lm]|t)$/,
+    );
+
+    while ( my @changes = $watcher->wait_for_events() ) {
+        print "[MSG]:" .  $_->path . " was changed.\n" for @changes;
+        _run_once;
         sleep 3;
     }
 }
