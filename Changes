@@ -1,5 +1,9 @@
 Revision history for Test-Continuous
 
+0.67:
+- use File::ChangeNotify to watch changed files because it is much faster than
+  linux. Thanks to dann++
+
 0.66:
 - fix the massive warning coming from File::Modified.
 
