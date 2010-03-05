@@ -94,12 +94,9 @@ sub runtests {
         }, getcwd;
     }
 
-    print "[MSG] Will run continuously test $_\n" for @tests;
+    print "[MSG] Will be continuously testing $_\n" for @tests;
 
-    my $watcher = File::ChangeNotify->instantiate_watcher( 
-        directories => [ getcwd ],
-        filter      => qr/\.(p[lm]|t)$/,
-    );
+    my $watcher = File::ChangeNotify->instantiate_watcher(directories => [ getcwd ]);
 
     while ( my @changes = $watcher->wait_for_events() ) {
         print "[MSG]:" .  $_->path . " was changed.\n" for @changes;
@@ -149,7 +146,7 @@ the same concept of implementation in Ruby's world.
 =item runtests
 
 This function starts monitoring the mtime of all files under current
-working directy. If there's any update, it'll run your module test
+working directory. If there's any update, it'll run your module tests
 under t/ directory with L<App::Prove>.
 
 You could call it from command line like this:
