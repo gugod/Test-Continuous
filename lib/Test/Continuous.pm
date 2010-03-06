@@ -96,12 +96,17 @@ sub runtests {
 
     print "[MSG] Will be continuously testing $_\n" for @tests;
 
-    my $watcher = File::ChangeNotify->instantiate_watcher(directories => [ getcwd ]);
+    # Watch all files excpet for:
+    # - vim / Emacs temp files,
+    # - git / svn repositoy
+    my $watcher = File::ChangeNotify->instantiate_watcher(
+        directories => [ getcwd ],
+        exclude => [".git", ".svn", qr(~$), qr(\.#.*#$)],
+    );
 
     while ( my @changes = $watcher->wait_for_events() ) {
         print "[MSG]:" .  $_->path . " was changed.\n" for @changes;
         _run_once;
-        sleep 3;
     }
 }
 
