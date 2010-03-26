@@ -1,5 +1,10 @@
 Revision history for Test-Continuous
 
+0.68:
+- Closes RT: 52158. Monitor virtually all files.
+  .git and .svn directories are ignored, as long as vim and emacs temp files.
+- Closes RT: 50286. Thanks Yusuke Watase for providing the patch.
+
 0.67:
 - use File::ChangeNotify to watch changed files because it is much faster than
   linux. Thanks to dann++
