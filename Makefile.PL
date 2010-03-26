@@ -12,7 +12,6 @@ build_requires  'Test::More'        => '0.42';
 
 requires(
     "Exporter::Lite"     => 0.02,
-    "File::Modified"     => 0.07,
     "File::Spec"         => 3.29,
     "File::Temp"         => 0.21,
     "List::MoreUtils"    => 0.22,
