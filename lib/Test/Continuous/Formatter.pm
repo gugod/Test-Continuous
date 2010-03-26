@@ -83,7 +83,7 @@ sub _analyze_test_output {
 
     return if $output =~ /^\s+$/s;
 
-    my @lines = split(/\n/, $output);
+    my @lines = split(/\n\s*/, $output);
     my $description = shift @lines;
 
     $description =~ m/^(.+)\s\.\./g;
