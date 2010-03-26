@@ -5,8 +5,8 @@ package Test::Continuous;
 
 use 5.008;
 
-our $VERSION = '0.67';
-    
+our $VERSION = '0.68';
+
 use Exporter::Lite;
 use App::Prove;
 use File::Find;
@@ -101,10 +101,10 @@ sub runtests {
     # - git / svn repositoy
     my $watcher = File::ChangeNotify->instantiate_watcher(
         directories => [ getcwd ],
-        exclude => [".git", ".svn", qr(~$), qr(\.#.*#$)],
+        exclude => [qr/\.(git|svn)/, qr(~$), qr(\.#.*$)]
     );
 
-    while ( my @changes = $watcher->wait_for_events() ) {
+    while ( @changes = $watcher->wait_for_events() ) {
         print "[MSG]:" .  $_->path . " was changed.\n" for @changes;
         _run_once;
     }
@@ -120,7 +120,7 @@ Test::Continuous - Run your tests suite continusouly when developing.
 
 =head1 VERSION
 
-This document describes Test::Continuous version 0.64
+This document describes Test::Continuous version 0.68
 
 =head1 SYNOPSIS
 
@@ -142,7 +142,7 @@ See also L<http://groups.csail.mit.edu/pag/continuoustesting/> for the
 original implementation of Continuous Testing as a Eclipse plugin.
 
 See also Zentest L<http://www.zenspider.com/ZSS/Products/ZenTest/> for
-the same concept of implementation in Ruby's world.
+the implementation in Ruby's world.
 
 =head1 INTERFACE
 
@@ -183,7 +183,7 @@ If a C<.t> file is modified, only that test file will be ran.
 
 Test::Continuous requires no configuration files or environment variables.
 
-Although it's based on L<App::Prove>, your C<.proverc> is not loaded.
+Your C<.proverc> is not loaded, although it's based on L<App::Prove>.
 
 =head1 DEPENDENCIES
 
@@ -209,7 +209,7 @@ Kang-min Liu  C<< <gugod@gugod.org> >>
 
 =head1 LICENCE AND COPYRIGHT
 
-Copyright (c) 2008,2009 Kang-min Liu C<< <gugod@gugod.org> >>.
+Copyright (c) 2008,2009,2010 Kang-min Liu C<< <gugod@gugod.org> >>.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself. See L<perlartistic>.
