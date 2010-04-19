@@ -67,7 +67,6 @@ sub _run_once {
     $prove->process_args(
         "-m",
         "-b",
-        "-l",
         "--norc",
         @prove_args,
         @tests
@@ -78,6 +77,30 @@ sub _run_once {
     $prove->run;
 }
 
+sub _rebuild {
+    my %build;
+    if ( -e "Build.PL" ) {
+        $build{cmd} = './Build';
+        $build{config} = 'Build.PL';
+    }
+    elsif ( -e "Makefile.PL" ) {
+        $build{cmd} = 'make';
+        $build{config} = 'Makefile.PL';
+    }
+
+    my $changes = shift;
+
+    # Rerun the config file if it changed or hasn't been run
+    if ( !-e $build{cmd} or grep { $_ eq $build{config} } @$changes) {
+        my $cmd = "$^X $build{config}";
+        system $cmd;
+        die "$cmd exited with non-zero" unless $? == 0;
+    }
+
+    system $build{cmd};
+    die "$build{cmd} exited with non-zero" unless $? == 0;
+}
+
 sub runtests {
     if (@ARGV) {
         # print "ARGV: " . join ",",@ARGV, "\n";
@@ -86,7 +109,6 @@ sub runtests {
         }
         @prove_args = @ARGV;
     } else {
-
         find sub {
             my $filename = $File::Find::name;
             return unless $filename =~ /\.t$/ && -f $filename;
@@ -106,6 +128,7 @@ sub runtests {
 
     while ( @changes = $watcher->wait_for_events() ) {
         print "[MSG]:" .  $_->path . " was changed.\n" for @changes;
+        _rebuild(\@changes);
         _run_once;
     }
 }
