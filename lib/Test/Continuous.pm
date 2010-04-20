@@ -61,12 +61,14 @@ sub _tests_to_run {
 }
 
 sub _run_once {
+    my $build = shift;
+
     my @tests = _tests_to_run;
 
     my $prove = App::Prove->new;
     $prove->process_args(
         "-m",
-        "-b",
+        $build ? "-b" : "-l",
         "--norc",
         @prove_args,
         @tests
@@ -88,6 +90,8 @@ sub _rebuild {
         $build{config} = 'Makefile.PL';
     }
 
+    return unless $build{cmd};
+
     my $changes = shift;
 
     # Rerun the config file if it changed or hasn't been run
@@ -99,6 +103,8 @@ sub _rebuild {
 
     system $build{cmd};
     die "$build{cmd} exited with non-zero" unless $? == 0;
+
+    return 1;
 }
 
 sub runtests {
@@ -128,8 +134,7 @@ sub runtests {
 
     while ( @changes = $watcher->wait_for_events() ) {
         print "[MSG]:" .  $_->path . " was changed.\n" for @changes;
-        _rebuild(\@changes);
-        _run_once;
+        _run_once( _rebuild(\@changes) );
     }
 }
 
