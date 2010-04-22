@@ -1,5 +1,8 @@
 Revision history for Test-Continuous
 
+0.69:
+- If the current dir can be built with 'make' or "Build.PL", it'll be built before running tests
+
 0.68:
 - Closes RT: 52158. Monitor virtually all files.
   .git and .svn directories are ignored, as long as vim and emacs temp files.

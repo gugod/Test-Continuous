@@ -132,9 +132,14 @@ sub runtests {
         exclude => [qr/\.(git|svn)/, qr(~$), qr(\.#.*$)]
     );
 
+    my $run = 1;
     while ( @changes = $watcher->wait_for_events() ) {
-        print "[MSG]:" .  $_->path . " was changed.\n" for @changes;
-        _run_once( _rebuild(\@changes) );
+        if ($run) {
+            print "[MSG]:" .  $_->path . " was changed.\n" for @changes;
+            _run_once( _rebuild(\@changes) );
+            print "\n\n" . "-" x 60 ."\n\n";
+        }
+        $run = 1-$run;
     }
 }
 
