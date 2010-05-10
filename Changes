@@ -1,7 +1,7 @@
 Revision history for Test-Continuous
 
 0.69:
-- If the current dir can be built with 'make' or "Build.PL", it'll be built before running tests
+- If the current dir can be built with 'make' or "Build.PL", it'll be built before running tests. Closes RT #52159 and RT #52160. Thanks to Michael G Schwern for providing the suggestions and patches.
 
 0.68:
 - Closes RT: 52158. Monitor virtually all files.
