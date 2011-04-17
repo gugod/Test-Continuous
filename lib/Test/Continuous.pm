@@ -7,7 +7,6 @@ use 5.008;
 
 our $VERSION = '0.69';
 
-use Exporter::Lite;
 use App::Prove;
 use File::Find;
 use Cwd;
@@ -16,7 +15,6 @@ use List::MoreUtils qw(uniq);
 use Test::Continuous::Formatter;
 use File::ChangeNotify;
 
-our @EXPORT = qw(&runtests);
 {
     no warnings;
     *{App::Prove::_exit} = sub {};
@@ -162,7 +160,7 @@ Very simple usage:
     % cd MyModule/
     % autoprove
 
-If you want to provide prove arguments:
+You may pass prove arguments:
 
     % autoprove --shuffle
 
@@ -171,9 +169,11 @@ If you want to provide prove arguments:
 I<Continuous Testing> is a concept and tool to re-run software tests
 as soon as the developer saved the source code.
 
-See also L<http://groups.csail.mit.edu/pag/continuoustesting/> for the
-original implementation of Continuous Testing as a Eclipse plugin.
+C<Test::Continuous> is a tool based on L<App::Prove> that implements
+this concept for Perl.
 
+See L<http://groups.csail.mit.edu/pag/continuoustesting/> for the
+original implementation of Continuous Testing as a Eclipse plugin.
 See also Zentest L<http://www.zenspider.com/ZSS/Products/ZenTest/> for
 the implementation in Ruby's world.
 
@@ -189,26 +189,10 @@ under t/ directory with L<App::Prove>.
 
 You could call it from command line like this:
 
-    perl -MTest::Continuous -e runtests
+    perl -MTest::Continuous -e Test::Continuous::runtests
 
 However, it's recommended to use L<autoprove> program shipped with
 this distribution to do this instead.
-
-Test results are displayed on terminal.  If
-L<Log::Dispatch::DesktopNotification> is installed, test results will
-also be notified through that channel. If running on Mac, it'll be
-Growl, if it's on Linux desktop, it's done with
-L<Log::Dispatch::Gtk2::Notify>.
-
-C<Test::Continuous> will auto detect the subset of tests to run.
-For example, say you have two test files C<feature-foo.t> and
-C<feature-bar.t> which test ,and use, your module C<Feature::Foo>
-and C<Feature::Bar> respectively. C<Test::Continuous> can catch
-this static dependency and only run C<feature-foo.t> when C<Feature::Foo>
-is modified, C<feature-bar.t> will only be ran if C<Feature::Bar>
-is modified.
-
-If a C<.t> file is modified, only that test file will be ran.
 
 =back
 
@@ -216,7 +200,7 @@ If a C<.t> file is modified, only that test file will be ran.
 
 Test::Continuous requires no configuration files or environment variables.
 
-Your C<.proverc> is not loaded, even though it's based on L<App::Prove>.
+Your C<.proverc> is NOT loaded, even though it's based on L<App::Prove>.
 
 =head1 DEPENDENCIES
 
@@ -241,11 +225,10 @@ Kang-min Liu  C<< <gugod@gugod.org> >>
 
 =head1 LICENCE AND COPYRIGHT
 
-Copyright (c) 2008,2009,2010 Kang-min Liu C<< <gugod@gugod.org> >>.
+Copyright (c) 2008,2009,2010,2011 Kang-min Liu C<< <gugod@gugod.org> >>.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself. See L<perlartistic>.
-
 
 =head1 DISCLAIMER OF WARRANTY
 
