@@ -129,7 +129,7 @@ sub runtests {
     # - git / svn repositoy
     my $watcher = File::ChangeNotify->instantiate_watcher(
         directories => [ getcwd ],
-        exclude => [qr/\.(git|svn)/, qr(~$), qr(\.#.*$)]
+        exclude => [qr/\.(git|svn)/, qr(~$), qr(\.#.*$), qr/\..*\.swp$/]
     );
 
     my $run = 1;
