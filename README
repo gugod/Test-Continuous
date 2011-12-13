@@ -1,5 +1,5 @@
 NAME
-    Test::Continuous - Run your tests suite continusouly when developing.
+    Test::Continuous - Run your test suite continuously when developing.
 
 VERSION
     This document describes Test::Continuous version 0.61
@@ -16,13 +16,13 @@ SYNOPSIS
 
 DESCRIPTION
     *Continuous Testing* is a concept and tool to re-run software tests as
-    soon as the developer saved the source code.
+    soon as the developer saves the source code.
 
     See also <http://groups.csail.mit.edu/pag/continuoustesting/> for the
-    original implementation of Continuous Testing as a Eclipse plugin.
+    original implementation of Continuous Testing as an Eclipse plugin.
 
     See also Zentest <http://www.zenspider.com/ZSS/Products/ZenTest/> for
-    the same concept of implementation in Ruby's world.
+    the same concept implemented in Ruby's world.
 
 INTERFACE
     runtests
@@ -41,7 +41,7 @@ INTERFACE
 
         "Test::Continuous" will auto detect the subset of tests to run. For
         example, say you have two test files "feature-foo.t" and
-        "feature-bar.t" which test ,and use, your module "Feature::Foo" and
+        "feature-bar.t" which test, and use, your module "Feature::Foo" and
         "Feature::Bar" respectively. "Test::Continuous" can catch this
         static dependency and only run "feature-foo.t" when "Feature::Foo"
         is modified, "feature-bar.t" will only be ran if "Feature::Bar" is

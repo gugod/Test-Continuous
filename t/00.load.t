@@ -7,5 +7,3 @@ BEGIN {
 }
 
 diag( "Testing Test::Continuous $Test::Continuous::VERSION" );
-
-

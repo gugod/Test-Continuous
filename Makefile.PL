@@ -4,7 +4,7 @@ use inc::Module::Install;
 
 all_from 'lib/Test/Continuous.pm';
 
-abstract 'Run your tests suite continusouly when developing.';
+abstract 'Run your test suite continuously when developing.';
 
 repository 'http://github.com/gugod/test-continuous/tree';
 
@@ -35,5 +35,3 @@ auto_install;
 install_script 'bin/autoprove';
 
 WriteAll;
-
-
