@@ -132,17 +132,16 @@ You shouldn't use this module directly.
 
 =head1 DESCRIPTION
 
-This package inherits from L<TAP::Formatter::Console>, and dispatch
-test summary to different output channels.
+This package inherits from L<TAP::Formatter::Console>, and dispatches
+test summaries to different output channels.
 
 =over
 
 =item summary
 
-Overrides the C<summary> method from parent. Send a processed output
+Overrides the C<summary> method from parent. Sends processed output
 to a C<Log::Dispatcher> object.
 
 =back
 
 =cut
-

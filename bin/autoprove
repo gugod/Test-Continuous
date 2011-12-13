@@ -27,7 +27,7 @@ And/or specify only the test programs that you want to run automatically:
 =head1 DESCRIPTION
 
 This program is a CLI front-end to the module L<Test::Continuous>. It is basically
-equivalent of running:
+the equivalent of running:
 
     perl -MTest::Continuous -e Test::Continuous::runtests
 
@@ -41,13 +41,13 @@ L<Log::Dispatch::Gtk2::Notify>.
 
 C<Test::Continuous> will auto detect the subset of tests to run.
 For example, say you have two test files C<feature-foo.t> and
-C<feature-bar.t> which test ,and use, your module C<Feature::Foo>
+C<feature-bar.t> which test, and use, your module C<Feature::Foo>
 and C<Feature::Bar> respectively. C<Test::Continuous> can catch
 this static dependency and only run C<feature-foo.t> when C<Feature::Foo>
-is modified, C<feature-bar.t> will only be ran if C<Feature::Bar>
+is modified, C<feature-bar.t> will only be run if C<Feature::Bar>
 is modified.
 
-If a C<.t> file is modified, only that test file will be ran.
+If a C<.t> file is modified, only that test file will be run.
 
 =head1 AUTHOR
 
@@ -84,4 +84,3 @@ SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGES.
 
 =cut
-

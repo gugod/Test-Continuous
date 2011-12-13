@@ -81,4 +81,3 @@ or C<"alert">. The default value is C<"info">.
 =back
 
 =cut
-
