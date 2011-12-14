@@ -147,7 +147,7 @@ __END__
 
 =head1 NAME
 
-Test::Continuous - Run your tests suite continusouly when developing.
+Test::Continuous - Run your test suite continuously when developing.
 
 =head1 VERSION
 
@@ -167,15 +167,15 @@ You may pass prove arguments:
 =head1 DESCRIPTION
 
 I<Continuous Testing> is a concept and tool to re-run software tests
-as soon as the developer saved the source code.
+as soon as the developer saves the source code.
 
 C<Test::Continuous> is a tool based on L<App::Prove> that implements
 this concept for Perl.
 
 See L<http://groups.csail.mit.edu/pag/continuoustesting/> for the
-original implementation of Continuous Testing as a Eclipse plugin.
+original implementation of Continuous Testing as an Eclipse plugin.
 See also Zentest L<http://www.zenspider.com/ZSS/Products/ZenTest/> for
-the implementation in Ruby's world.
+the same concept implemented in Ruby's world.
 
 =head1 INTERFACE
 
@@ -191,7 +191,7 @@ You could call it from command line like this:
 
     perl -MTest::Continuous -e Test::Continuous::runtests
 
-However, it's recommended to use L<autoprove> program shipped with
+However, it's recommended to use the L<autoprove> program shipped with
 this distribution to do this instead.
 
 =back
@@ -210,7 +210,7 @@ L<Module::ExtractUse>
 =head1 INCOMPATIBILITIES
 
 It might not be compatible with all Test::Harness::* classes. Testing with
-remote harness classes are bascially working, but has some glitches. Helps are
+remote harness classes basically works, but has some glitches. Help is
 appreciated.
 
 =head1 BUGS AND LIMITATIONS

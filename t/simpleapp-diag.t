@@ -27,4 +27,3 @@ is_deeply(
         "t/diag.t:\n# Send a diag message",
     ]
 );
-
