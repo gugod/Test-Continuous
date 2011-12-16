@@ -4,5 +4,3 @@ use Test::More tests => 1;
 
 diag "Send a diag message";
 pass;
-
-
