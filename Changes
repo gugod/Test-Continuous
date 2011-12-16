@@ -3,6 +3,7 @@ Revision history for Test-Continuous
 0.70:
 - remove the use of Exporter::Lite in favor of using 'autoprove' command.
 - Fix RT 66822: exclude vim swap files.
+- let "autoprove <prove args>" run all tests instead of no tests at all.
 
 0.69:
 - If the current dir can be built with 'make' or "Build.PL", it'll be built before running tests. Closes RT #52159 and RT #52160. Thanks to Michael G Schwern for providing the suggestions and patches.
