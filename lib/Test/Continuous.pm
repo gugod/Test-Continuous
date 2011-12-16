@@ -112,7 +112,9 @@ sub runtests {
             push @tests, pop @ARGV;
         }
         @prove_args = @ARGV;
-    } else {
+    }
+
+    unless (@tests) {
         find sub {
             my $filename = $File::Find::name;
             return unless $filename =~ /\.t$/ && -f $filename;
