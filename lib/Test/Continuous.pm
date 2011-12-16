@@ -5,7 +5,7 @@ package Test::Continuous;
 
 use 5.008;
 
-our $VERSION = '0.70';
+our $VERSION = '0.71';
 
 use App::Prove;
 use File::Find;
