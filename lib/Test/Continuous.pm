@@ -5,7 +5,7 @@ package Test::Continuous;
 
 use 5.008;
 
-our $VERSION = '0.71';
+our $VERSION = '0.72';
 
 use File::Find;
 use Cwd;
