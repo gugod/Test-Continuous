@@ -7,18 +7,13 @@ use 5.008;
 
 our $VERSION = '0.71';
 
-use App::Prove;
 use File::Find;
 use Cwd;
 use Module::ExtractUse;
 use List::MoreUtils qw(uniq);
 use Test::Continuous::Formatter;
 use File::ChangeNotify;
-
-{
-    no warnings;
-    *{App::Prove::_exit} = sub {};
-}
+use YAML;
 
 my @prove_args;
 my @tests;
@@ -63,21 +58,14 @@ sub _run_once {
 
     my @tests = _tests_to_run;
 
-    my $prove = App::Prove->new;
-    $prove->process_args(
-        "-m",
-        $build ? "-b" : "-l",
-        "--norc",
-        @prove_args,
-        @tests
-    );
-    $prove->formatter("Test::Continuous::Formatter");
-    $prove->verbose(1);
-    $prove->merge(1);
-    $prove->run;
+    print "\033[2J\033[0;0H"; #cls
+    print "prove --norc " . join(" ", @prove_args, @tests) . "\n";
+    system(qw(prove --norc -v -m --formatter Test::Continuous::Formatter), @prove_args, @tests);
 }
 
 sub _rebuild {
+    return unless grep { $_ eq "-b" } @prove_args;
+
     my %build;
     if ( -e "Build.PL" ) {
         $build{cmd} = './Build';
@@ -132,14 +120,16 @@ sub runtests {
         exclude => [qr/\.(git|svn)/, qr(~$), qr(\.#.*$), qr/\..*\.swp$/]
     );
 
-    my $run = 1;
+
+    @changes = ();
+    _run_once(_rebuild([]));
+
+    my $running = 0;
     while ( @changes = $watcher->wait_for_events() ) {
-        if ($run) {
-            print "[MSG]:" .  $_->path . " was changed.\n" for @changes;
-            _run_once( _rebuild(\@changes) );
-            print "\n\n" . "-" x 60 ."\n\n";
-        }
-        $run = 1-$run;
+        print "[MSG]:" .  $_->path . " was changed.\n" for @changes;
+        _run_once( _rebuild(\@changes) );
+        print "\n\n" . "-" x 60 ."\n\n";
+        sleep 3;
     }
 }
 
