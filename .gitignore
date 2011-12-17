@@ -2,6 +2,7 @@
 MANIFEST
 MANIFEST.bak
 META.yml
+MYMETA.*
 Makefile
 Makefile.old
 blib/
