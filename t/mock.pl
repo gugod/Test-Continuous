@@ -1,15 +1,13 @@
 use FindBin;
-use File::Temp qw(:POSIX);
+use File::Temp;
 use YAML;
 
 $ENV{PERL5LIB} = join(":", $FindBin::Bin."/lib", $FindBin::Bin."/../lib", $ENV{PERL5LIB});
 
-$ENV{PERL_TEST_CONTINUOUS_TEST_NOTIFY_OUTPUT} = tmpnam;
+my $temp = File::Temp->new;
+$temp->unlink_on_destroy(0);
 
-{
-    open my $fh, ">", $ENV{PERL_TEST_CONTINUOUS_TEST_NOTIFY_OUTPUT};
-    close $fh;
-}
+$ENV{PERL_TEST_CONTINUOUS_TEST_NOTIFY_OUTPUT} = $temp->filename;
 
 sub read_notifications {
     YAML::LoadFile($ENV{PERL_TEST_CONTINUOUS_TEST_NOTIFY_OUTPUT});
