@@ -6,11 +6,12 @@ all_from 'lib/Test/Continuous.pm';
 
 abstract 'Run your test suite continuously when developing.';
 
-repository 'http://github.com/gugod/test-continuous/tree';
+repository 'git://github.com/gugod/Test-Continuous.git';
 
 build_requires  'Test::More'        => '0.42';
 
 requires(
+    "App::Prove"         => 3.23,
     "File::Spec"         => 3.29,
     "File::Temp"         => 0.21,
     "List::MoreUtils"    => 0.22,
