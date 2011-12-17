@@ -1,5 +1,10 @@
 Revision history for Test-Continuous
 
+0.72:
+- Now need 'autoprove -b' to build. In many cases, '-l' is sufficient.
+- '-b' and '-l' args are also populated to the underlying invocation to "prove".
+- Use system() instead to help preventing stucking in the middle of tests
+
 0.71:
 - let "autoprove <prove args>" run all tests instead of no tests at all.
 - fix typos
