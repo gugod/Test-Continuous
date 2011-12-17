@@ -22,6 +22,8 @@ requires(
     "File::ChangeNotify" => 0.12
 );
 
+test_requires YAML => 0.77;
+
 features(
     'Graphical notifications' => [
         -default => 1,

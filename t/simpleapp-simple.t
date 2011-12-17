@@ -1,15 +1,12 @@
 #!/usr/bin/env perl -w
 use strict;
 use lib 't';
+require 'mock.pl';
 
 use Test::More tests => 1;
-
 use Test::Continuous;
-use Test::Continuous::Formatter;
 
 use Cwd qw(chdir);
-
-our @notified;
 
 require 'mock.pl';
 
@@ -22,6 +19,8 @@ require 'mock.pl';
 chdir("t/SimpleApp");
 
 Test::Continuous::_run_once;
+
+my @notified = read_notifications();
 
 is_deeply(
     \@notified,
