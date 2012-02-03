@@ -1,5 +1,8 @@
 Revision history for Test-Continuous
 
+0.73:
+- Ignore a lot more known boring files. Specifically Komodo project files. See RT #74670.
+
 0.72:
 - Now need 'autoprove -b' to build. In many cases, '-l' is sufficient.
 - '-b' and '-l' args are also populated to the underlying invocation to "prove".
