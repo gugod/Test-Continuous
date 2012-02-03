@@ -112,14 +112,41 @@ sub runtests {
 
     print "[MSG] Will be continuously testing $_\n" for @tests;
 
-    # Watch all files excpet for:
-    # - vim / Emacs temp files,
-    # - git / svn repositoy
     my $watcher = File::ChangeNotify->instantiate_watcher(
         directories => [ getcwd ],
-        exclude => [qr/\.(git|svn)/, qr(~$), qr(\.#.*$), qr/\..*\.swp$/]
-    );
+        exclude => [
+            qr/\.(bzr|
+                  cdv|
+                  dep|
+                  dot|
+                  nib|
+                  plst|
+                  git|
+                  hg|
+                  pc|
+                  svn|
+                  komodoproject|
+                  bak)$/x,
 
+            qr/^(_MTN|
+                 blib|
+                 CVS|
+                 RCS|
+                 SCCS|
+                 _darcs|
+                 _sgbak|
+                 autom4te\.cache|
+                 cover_db|
+                 _build)$/x,
+
+            qr(~$),
+            qr/\.#.*$/,
+            qr/^#.*#$/,
+            qr/\..*\.swp$/,
+            qr/^core\.\d+$/,
+            qr/[.-]min\.js$/
+        ]
+    );
 
     @changes = ();
     _run_once(_rebuild([]));
