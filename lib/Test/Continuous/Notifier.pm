@@ -4,7 +4,6 @@ use warnings;
 package Test::Continuous::Notifier;
 use Log::Dispatch;
 use Log::Dispatch::Screen;
-use self;
 
 {
     my $dispatcher;
@@ -39,7 +38,8 @@ my %status_icon = (
 );
 
 sub send_notify {
-    my ($text, $status) = args;
+	my $self = shift;
+    my ($text, $status) = @_;
     $status ||= 'info';
     if (my $notify = self->_dispatcher->remove("continuous_notify")) {
         $notify->{icon_file} = '/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/' .

@@ -5,14 +5,14 @@ package Test::Continuous::Formatter;
 use base 'TAP::Formatter::Base';
 use Test::Continuous::Notifier;
 use Test::Continuous::Formatter::Session;
-use self;
 
 use 5.008;
 
 our $VERSION = "0.0.2";
 
 sub open_test {
-    my ($test, $parser ) = @args;
+	my $self = shift;
+    my ($test, $parser ) = @_;
 
     my $session = Test::Continuous::Formatter::Session->new(
         {
@@ -30,7 +30,8 @@ sub open_test {
 }
 
 sub summary {
-    my ($aggregate) = @args;
+	my $self = shift;
+    my ($aggregate) = @_;
 
     my $summary;
     my $non_zero_exit_status = 0;
@@ -72,11 +73,13 @@ sub summary {
 }
 
 sub _output {
-    my $out  = join('', @args);
+	my $self = shift;
+    my $out  = join('', @_);
     $self->{__tc_output} .= "$out\n";
 }
 
 sub _analyze_test_output {
+	my $self = shift;
     my(@comment, @warning);
 
     my $output = $self->{__tc_output};
