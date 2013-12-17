@@ -41,12 +41,12 @@ sub send_notify {
 	my $self = shift;
     my ($text, $status) = @_;
     $status ||= 'info';
-    if (my $notify = self->_dispatcher->remove("continuous_notify")) {
+    if (my $notify = $self->_dispatcher->remove("continuous_notify")) {
         $notify->{icon_file} = '/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/' .
             ($status_icon{$status} || 'ToolbarInfo.icns');
-        self->_dispatcher->add($notify);
+        $self->_dispatcher->add($notify);
     }
-    self->_dispatcher->$status($text);
+    $self->_dispatcher->$status($text);
 }
 
 
