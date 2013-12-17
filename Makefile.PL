@@ -18,7 +18,6 @@ requires(
     "Log::Dispatch"      => 2.22,
     "Module::ExtractUse" => 0.23,
     "TAP::Harness"       => 3.16,
-    "self"               => 0.32,
     "File::ChangeNotify" => 0.12
 );
 
