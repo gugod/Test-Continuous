@@ -1,5 +1,8 @@
 Revision history for Test-Continuous
 
+0.74:
+- Fix it for perl 5.18.
+
 0.73:
 - Ignore a lot more known boring files. Specifically Komodo project files. See RT #74670.
 
