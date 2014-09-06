@@ -13,6 +13,7 @@ use Module::ExtractUse;
 use List::MoreUtils qw(uniq);
 use Test::Continuous::Formatter;
 use File::ChangeNotify;
+use Git::Repository;
 use YAML;
 
 my @prove_args;
@@ -51,6 +52,82 @@ sub _tests_to_run {
     return @tests if @tests_to_run == 0;
 
     return @tests_to_run;
+}
+
+sub _get_exclude_list {
+    my $exclude_list = [
+        qr/\.(bzr|
+            cdv|
+            dep|
+            dot|
+            nib|
+            plst|
+            git|
+            hg|
+            pc|
+            svn|
+            komodoproject|
+            bak)$/x,
+
+        qr/^(_MTN|
+            blib|
+            CVS|
+            RCS|
+            SCCS|
+            _darcs|
+            _sgbak|
+            autom4te\.cache|
+            cover_db|
+            _build)$/x,
+
+        qr(~$),
+        qr/\.#.*$/,
+        qr/^#.*#$/,
+        qr/\..*\.swp$/,
+        qr/^core\.\d+$/,
+        qr/[.-]min\.js$/
+    ];
+
+    # Attempt to get the git directory Test::Continuous was run in
+    my $path = getcwd;
+    my $git_repo_top_level = Git::Repository->run( 'rev-parse', '--show-toplevel', {
+        cwd => $path,
+    });
+    my ( $git_ignore, $git_dir );
+
+    # If the git command came up with a git repo use it's .gitignore
+    if ($git_repo_top_level) {
+        $git_dir = $git_repo_top_level;
+        $git_ignore = $git_repo_top_level."/.gitignore";
+    # Otherwise use a .gitignore in the cwd
+    } else {
+        $git_dir = getcwd;
+        $git_ignore = $git_dir.'.gitignore';
+    }
+
+    # If a .gitignore exists add its expanded contents to the exclude list
+    if ( -e $git_ignore ) {
+        # Git command found here: http://stackoverflow.com/a/467053/630490
+        my @git_ignored_files = Git::Repository->run( 'ls-files', '-o', '-i', '--exclude-standard', {
+            cwd => $git_dir,
+        });
+        # Prepend the git dir to get an absolute path
+        @git_ignored_files = map { $git_dir.'/'.$_ } @git_ignored_files;
+        @$exclude_list = ( @$exclude_list, @git_ignored_files );
+    }
+
+    return $exclude_list;
+}
+
+sub _match_against_excluded {
+    my $element = shift;
+    my $excluded = shift || _get_exclude_list();
+
+    foreach ( @$excluded ) {
+        return 1 if ref eq 'Regexp' and $element =~ $_;
+        return 1 if $element eq $_;
+    }
+    return 0;
 }
 
 sub _run_once {
@@ -114,38 +191,7 @@ sub runtests {
 
     my $watcher = File::ChangeNotify->instantiate_watcher(
         directories => [ getcwd ],
-        exclude => [
-            qr/\.(bzr|
-                  cdv|
-                  dep|
-                  dot|
-                  nib|
-                  plst|
-                  git|
-                  hg|
-                  pc|
-                  svn|
-                  komodoproject|
-                  bak)$/x,
-
-            qr/^(_MTN|
-                 blib|
-                 CVS|
-                 RCS|
-                 SCCS|
-                 _darcs|
-                 _sgbak|
-                 autom4te\.cache|
-                 cover_db|
-                 _build)$/x,
-
-            qr(~$),
-            qr/\.#.*$/,
-            qr/^#.*#$/,
-            qr/\..*\.swp$/,
-            qr/^core\.\d+$/,
-            qr/[.-]min\.js$/
-        ]
+        exclude => _get_exclude_list(),
     );
 
     @changes = ();
@@ -153,10 +199,15 @@ sub runtests {
 
     my $running = 0;
     while ( @changes = $watcher->wait_for_events() ) {
-        print "[MSG]:" .  $_->path . " was changed.\n" for @changes;
-        _run_once( _rebuild(\@changes) );
-        print "\n\n" . "-" x 60 ."\n\n";
-        sleep 3;
+        my $excluded_files = _get_exclude_list();
+        # Skip this file if it matches the exclude array
+        my @included_changes = grep { not _match_against_excluded($_->path, $excluded_files) } @changes;
+        if ( @included_changes ) {
+           print "[MSG]:" .  $_->path . " was changed.\n" for @included_changes;
+           _run_once( _rebuild(\@included_changes) );
+           print "\n\n" . "-" x 60 ."\n\n";
+           sleep 3;
+        }
     }
 }
 
