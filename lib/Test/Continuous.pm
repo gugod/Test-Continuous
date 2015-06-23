@@ -10,7 +10,7 @@ our $VERSION = '0.74';
 use File::Find;
 use Cwd;
 use Module::ExtractUse;
-use List::MoreUtils qw(uniq);
+use List::MoreUtils qw(after before uniq);
 use Test::Continuous::Formatter;
 use File::ChangeNotify;
 use YAML;
@@ -18,7 +18,17 @@ use YAML;
 my @prove_args;
 my @tests;
 my @changes;
-my @files;
+my @not_files;
+my @classes;
+
+sub _classify_argv {
+    if (@ARGV) {
+        @not_files  = grep   { !-f $_ }     @ARGV;
+        @tests      = grep   {  -f $_ }     @ARGV;
+        @classes    = after  { $_ eq '::' } @not_files;
+        @prove_args = before { $_ eq '::' } @not_files;
+    }
+}
 
 sub _tests_to_run {
     my %dep;
@@ -55,12 +65,13 @@ sub _tests_to_run {
 
 sub _run_once {
     my $build = shift;
-
+    _classify_argv();
     my @tests = _tests_to_run;
+    my @command_args = ( @prove_args, @tests, '::', @classes );
 
     print "\033[2J\033[0;0H"; #cls
-    print "prove --norc " . join(" ", @prove_args, @tests) . "\n";
-    system(qw(prove --norc -v -m --formatter Test::Continuous::Formatter), @prove_args, @tests);
+    print "prove --norc " . join(" ", @command_args) . "\n";
+    system(qw(prove --norc -v -m --formatter Test::Continuous::Formatter), @command_args);
 }
 
 sub _rebuild {
@@ -94,13 +105,7 @@ sub _rebuild {
 }
 
 sub runtests {
-    if (@ARGV) {
-        # print "ARGV: " . join ",",@ARGV, "\n";
-        while ($ARGV[-1] && -f $ARGV[-1]) {
-            push @tests, pop @ARGV;
-        }
-        @prove_args = @ARGV;
-    }
+    _classify_argv();
 
     unless (@tests) {
         find sub {
