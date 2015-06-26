@@ -18,7 +18,8 @@ requires(
     "Log::Dispatch"      => 2.22,
     "Module::ExtractUse" => 0.23,
     "TAP::Harness"       => 3.16,
-    "File::ChangeNotify" => 0.12
+    "File::ChangeNotify" => 0.12,
+    "Git::Repository"    => 0
 );
 
 test_requires(
