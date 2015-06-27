@@ -20,5 +20,5 @@ chdir('t/TestClassApp');
 
     like   $notifications[0], qr/ALL PASSED/,          'tests pass';
     like   $notifications[1], qr/Bar\->addition/,      'Bar tests run';
-    unlike $notifications[1], qr/Foo\->concatination/, 'Foo tests run';
+    unlike $notifications[1], qr/Foo\->concatination/, 'Foo tests not run';
 }
