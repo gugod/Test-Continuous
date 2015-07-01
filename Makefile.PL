@@ -37,7 +37,6 @@ features(
 tests 't/*.t';
 author_tests 'xt/*.t';
 
-auto_install;
 install_script 'bin/autoprove';
 
 WriteAll;
