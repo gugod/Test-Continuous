@@ -224,10 +224,6 @@ __END__
 
 Test::Continuous - Run your test suite continuously when developing.
 
-=head1 VERSION
-
-This document describes Test::Continuous version 0.68
-
 =head1 SYNOPSIS
 
 Very simple usage:
@@ -300,7 +296,7 @@ Kang-min Liu  C<< <gugod@gugod.org> >>
 
 =head1 LICENCE AND COPYRIGHT
 
-Copyright (c) 2008,2009,2010,2011 Kang-min Liu C<< <gugod@gugod.org> >>.
+Copyright (c) 2008 - 2015 Kang-min Liu C<< <gugod@gugod.org> >>.
 
 This module is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself. See L<perlartistic>.

@@ -1,84 +1,66 @@
 NAME
     Test::Continuous - Run your test suite continuously when developing.
 
-VERSION
-    This document describes Test::Continuous version 0.61
-
 SYNOPSIS
     Very simple usage:
 
         % cd MyModule/
-        % perl -MTest::Continuous -e runtests
+        % autoprove
 
-    If you want to provide prove arguments:
+    You may pass prove arguments:
 
-        % perl -MTest::Continuous -e runtests -- --shuffle
+        % autoprove --shuffle
 
 DESCRIPTION
     *Continuous Testing* is a concept and tool to re-run software tests as
     soon as the developer saves the source code.
 
-    See also <http://groups.csail.mit.edu/pag/continuoustesting/> for the
-    original implementation of Continuous Testing as an Eclipse plugin.
+    "Test::Continuous" is a tool based on App::Prove that implements this
+    concept for Perl.
 
-    See also Zentest <http://www.zenspider.com/ZSS/Products/ZenTest/> for
-    the same concept implemented in Ruby's world.
+    See <http://groups.csail.mit.edu/pag/continuoustesting/> for the
+    original implementation of Continuous Testing as an Eclipse plugin. See
+    also Zentest <http://www.zenspider.com/ZSS/Products/ZenTest/> for the
+    same concept implemented in Ruby's world.
 
 INTERFACE
     runtests
-        This is the only function that you should be calling, directly from
-        command line:
+        This function starts monitoring the mtime of all files under current
+        working directory. If there's any update, it runs your module tests
+        under t/ directory with App::Prove.
 
-            perl -MTest::Continuous -e runtests
+        You could call it from command line like this:
 
-        It'll start monitoring the mtime of all files under current working
-        directy. If there's any update, it'll run your module test under t/
-        directory with App::Prove.
+            perl -MTest::Continuous -e Test::Continuous::runtests
 
-        Test result are displayed on terminal. Also dispatched to Growl if
-        "Log::Dispatch::MacGrowl" is installed. Big plus for perl
-        programmers on Mac.
-
-        "Test::Continuous" will auto detect the subset of tests to run. For
-        example, say you have two test files "feature-foo.t" and
-        "feature-bar.t" which test, and use, your module "Feature::Foo" and
-        "Feature::Bar" respectively. "Test::Continuous" can catch this
-        static dependency and only run "feature-foo.t" when "Feature::Foo"
-        is modified, "feature-bar.t" will only be ran if "Feature::Bar" is
-        modified.
-
-        If a ".t" file is modified, only that test file will be ran.
-
-        Dynamic module dependency is more difficult to detect and needs
-        further research.
+        However, it's recommended to use the autoprove program shipped with
+        this distribution to do this instead.
 
 CONFIGURATION AND ENVIRONMENT
     Test::Continuous requires no configuration files or environment
     variables.
 
+    Your ".proverc" is NOT loaded, even though it's based on App::Prove.
+
 DEPENDENCIES
-    App::Prove, Log::Dispatch, Log::Dispatch::MacGrowl, Module::ExtractUse
+    App::Prove, Log::Dispatch, Log::Dispatch::DesktopNotification,
+    Module::ExtractUse
 
 INCOMPATIBILITIES
-    None reported.
+    It might not be compatible with all Test::Harness::* classes. Testing
+    with remote harness classes basically works, but has some glitches. Help
+    is appreciated.
 
 BUGS AND LIMITATIONS
-    No bugs have been reported.
-
     Please report any bugs or feature requests to
     "bug-test-continuous@rt.cpan.org", or through the web interface at
     <http://rt.cpan.org>.
-
-TODO
-    A good name for executable.
-    Accept a per-module config file to tweak different parameters to prove
-    command.
 
 AUTHOR
     Kang-min Liu "<gugod@gugod.org>"
 
 LICENCE AND COPYRIGHT
-    Copyright (c) 2008,2009 Kang-min Liu "<gugod@gugod.org>".
+    Copyright (c) 2008 - 2015 Kang-min Liu "<gugod@gugod.org>".
 
     This module is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself. See perlartistic.
