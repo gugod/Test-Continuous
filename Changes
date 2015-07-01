@@ -1,5 +1,9 @@
 Revision history for Test-Continuous
 
+0.75:
+- Use .gitignore to build exclude list if it exists. (Sean Zellmer)++
+- better suppport for Test::Class-based tests. (Nelo Onyiah)++
+
 0.74:
 - Fix it for perl 5.18.
 
