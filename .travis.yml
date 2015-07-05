@@ -1,0 +1,25 @@
+language: perl
+perl:
+  - "5.20"
+  - "5.20-shrplib"
+  - "5.18"
+  - "5.18-shrplib"
+  - "5.18"
+  - "5.16"
+  - "5.14"
+
+before_install:
+  - yes | perl -MCPAN::FirstTime -e CPAN::FirstTime::init
+  - cpanm --notest --verbose Module::Install Module::Install::CPANfile Devel::Cover Devel::Cover::Report::Coveralls
+
+script:
+  PERL5OPT=-MDevel::Cover prove -Ilib -r t && cover -report coveralls
+
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.org#chupei.pm"
+    use_notice: true
+
+git:
+  depth: 1
