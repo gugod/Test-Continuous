@@ -12,7 +12,7 @@ requires "Test::More"         => 0.42;
 
 on test => sub {
     requires "YAML"        => 0.77;
-    requires "Test::Class" => 0.41;
+    requires "Test::Class" => 0.50;
 };
 
 feature 'notify', 'Graphical notifications' => sub {
