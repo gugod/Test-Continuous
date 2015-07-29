@@ -24,8 +24,8 @@ my @classes;
 
 sub _classify_argv {
     if (@ARGV) {
-        @not_files  = grep   { !-f $_ }     @ARGV;
-        @tests      = grep   {  -f $_ }     @ARGV;
+        @not_files  = grep   { !( -f $_ or -d $_ ) }     @ARGV;
+        @tests      = grep   {    -f $_ or -d $_   }     @ARGV;
         @classes    = after  { $_ eq '::' } @not_files;
         @prove_args = before { $_ eq '::' } @not_files;
     }
