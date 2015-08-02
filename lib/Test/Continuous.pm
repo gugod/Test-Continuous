@@ -21,6 +21,7 @@ my @tests;
 my @changes;
 my @not_files;
 my @classes;
+my %config;
 
 sub _classify_argv {
     if (@ARGV) {
@@ -191,6 +192,22 @@ sub runtests {
             push @tests, $filename;
         }, getcwd;
     }
+   
+    # Parse environment 
+    # This is a comma-seperated list of options, from the environmental
+    # variable TEST_CONTINUOUS.  Right now, only one option, but if more
+    # are needed, they can be added here.
+    %config = ();
+    if (defined($ENV{TEST_CONTINUOUS})) {
+        foreach (split /,/, $ENV{TEST_CONTINUOUS}) {
+            if (/^SKIP_INITIAL$/ois) {
+                $config{skip} = 1;
+                print "[MSG] SKIP_INITIAL detected, skipping initial tests\n";
+            } else {
+                die('Unknown option passed in $ENV{TEST_CONTINUOUS}: '.$_);
+            }
+        }
+    }
 
     print "[MSG] Will be continuously testing $_\n" for @tests;
 
@@ -200,7 +217,12 @@ sub runtests {
     );
 
     @changes = ();
-    _run_once(_rebuild([]));
+
+    # If $ENV{TEST_CONTINUOUS} includes 'SKIP_INITIAL', we don't do
+    # this initial test.
+    if (!(exists($config{skip}) && $config{skip})) {
+        _run_once(_rebuild([]));
+    }
 
     my $running = 0;
     while ( @changes = $watcher->wait_for_events() ) {
@@ -269,9 +291,17 @@ this distribution to do this instead.
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
-Test::Continuous requires no configuration files or environment variables.
+Test::Continuous requires no configuration files.
 
 Your C<.proverc> is NOT loaded, even though it's based on L<App::Prove>.
+
+One environmental variable is parsed, C<TEST_CONTINUOUS>.  This variable
+can only have one value, C<SKIP_INITIAL>, which signals to this module
+that you do not want the module to run all test files when the program
+starts.  Generally, you should run all tests, in case something changed
+while C<Test::Continuous> was not running, but this functionality may
+be useful in some circumstances.  If C<TEST_CONTINUOUS> is not set,
+the standard initial tests are run (this is recommended).
 
 =head1 DEPENDENCIES
 
