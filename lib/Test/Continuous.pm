@@ -149,7 +149,27 @@ sub _run_once {
 
     print "\033[2J\033[0;0H"; #cls
     print "prove --norc " . join(" ", @command_args) . "\n";
-    system(qw(prove --norc -v -m --formatter Test::Continuous::Formatter), @command_args);
+
+    # This is from the prove source code
+    my $script = <<'EOS';
+        use strict;
+        use warnings;
+        use App::Prove;
+
+        my $app = App::Prove->new();
+        $app->process_args(@ARGV);
+        exit( $app->run ? 0: 1 );
+EOS
+
+    # We don't run "prove" directly because the prove in the system path
+    # may be very different than the perl that this module is running
+    # under.  So we "simulate" prove by using App::Prove (using the data
+    # in $script from above).
+    system(
+        $^X, '-e', $script,
+        qw(-- --norc -v -m --formatter Test::Continuous::Formatter),
+        @command_args
+    );
 }
 
 sub _rebuild {
