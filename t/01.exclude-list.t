@@ -178,3 +178,5 @@ META.*';
         $gitignore_repo.'/test.swp',
    ], 'default exclude list returned in environment with files';
 };
+
+chdir $home; # so we can clean up the temp files
