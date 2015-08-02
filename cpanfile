@@ -9,6 +9,7 @@ requires "TAP::Harness"       => 3.16;
 requires "File::ChangeNotify" => 0.12;
 requires "Git::Repository"    => 0;
 requires "Test::More"         => 0.42;
+requires "Term::Cap"          => 1.10;
 
 on test => sub {
     requires "YAML"        => 0.77;
