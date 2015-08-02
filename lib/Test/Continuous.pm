@@ -21,15 +21,49 @@ my @tests;
 my @changes;
 my @not_files;
 my @classes;
-my %config;
 
-sub _classify_argv {
-    if (@ARGV) {
-        @not_files  = grep   { !( -f $_ or -d $_ ) }     @ARGV;
-        @tests      = grep   {    -f $_ or -d $_   }     @ARGV;
-        @classes    = after  { $_ eq '::' } @not_files;
-        @prove_args = before { $_ eq '::' } @not_files;
+# Parse ARGV and environmental options, using AUTOPROVE_OPTS followed by
+# command-line
+# 
+# Returns a hash reference of configuration keys and values
+sub _classify_opts {
+    my @env;
+    if (defined($ENV{AUTOPROVE_OPTS})) {
+        @env = split(/\s+/os, $ENV{AUTOPROVE_OPTS});
     }
+
+    # Preserve order properly
+    my (@opts);
+    push @opts, before { $_ eq '::' } @env;
+    push @opts, @ARGV;
+    push @opts, after  { $_ eq '::' } @env;
+
+    if (@opts) {
+        my (@not_opts) = grep   { !( /^--autoprove-/i ) }   @opts;
+        @not_files     = grep   { !( -f $_ or -d $_ ) }     @not_opts;
+        @tests         = grep   {    -f $_ or -d $_   }     @not_opts;
+        @classes       = after  { $_ eq '::' } @not_files;
+        @prove_args    = before { $_ eq '::' } @not_files;
+    }
+
+    return _parse_options(@opts);
+}
+
+sub _parse_options {
+    my @opts = @_;
+    my %config;
+
+    foreach (grep { /^--autoprove-/i } @opts) {
+        if (/^--autoprove-skip-initial$/ois) {
+            $config{skip} = 1;
+        } elsif (/^--autoprove-no-skip-initial$/ois) {
+            $config{skip} = undef;
+        } else {
+            die("Unknown option: $_");
+        }
+    }
+
+    return \%config;
 }
 
 sub _tests_to_run {
@@ -143,7 +177,7 @@ sub _match_against_excluded {
 
 sub _run_once {
     my $build = shift;
-    _classify_argv();
+    _classify_opts();  # We don't need the return value here
     my @tests = _tests_to_run;
     my @command_args = ( @prove_args, @tests, '::', @classes );
 
@@ -183,7 +217,7 @@ sub _rebuild {
 }
 
 sub runtests {
-    _classify_argv();
+    my $config = _classify_opts();
 
     unless (@tests) {
         find sub {
@@ -193,22 +227,6 @@ sub runtests {
         }, getcwd;
     }
    
-    # Parse environment 
-    # This is a comma-seperated list of options, from the environmental
-    # variable TEST_CONTINUOUS.  Right now, only one option, but if more
-    # are needed, they can be added here.
-    %config = ();
-    if (defined($ENV{TEST_CONTINUOUS})) {
-        foreach (split /,/, $ENV{TEST_CONTINUOUS}) {
-            if (/^SKIP_INITIAL$/ois) {
-                $config{skip} = 1;
-                print "[MSG] SKIP_INITIAL detected, skipping initial tests\n";
-            } else {
-                die('Unknown option passed in $ENV{TEST_CONTINUOUS}: '.$_);
-            }
-        }
-    }
-
     print "[MSG] Will be continuously testing $_\n" for @tests;
 
     my $watcher = File::ChangeNotify->instantiate_watcher(
@@ -218,9 +236,9 @@ sub runtests {
 
     @changes = ();
 
-    # If $ENV{TEST_CONTINUOUS} includes 'SKIP_INITIAL', we don't do
-    # this initial test.
-    if (!(exists($config{skip}) && $config{skip})) {
+    if ($config->{skip} ) {
+        print "[MSG] SKIP_INITIAL detected, skipping initial tests\n";
+    } else {
         _run_once(_rebuild([]));
     }
 
@@ -295,13 +313,32 @@ Test::Continuous requires no configuration files.
 
 Your C<.proverc> is NOT loaded, even though it's based on L<App::Prove>.
 
-One environmental variable is parsed, C<TEST_CONTINUOUS>.  This variable
-can only have one value, C<SKIP_INITIAL>, which signals to this module
-that you do not want the module to run all test files when the program
-starts.  Generally, you should run all tests, in case something changed
-while C<Test::Continuous> was not running, but this functionality may
-be useful in some circumstances.  If C<TEST_CONTINUOUS> is not set,
-the standard initial tests are run (this is recommended).
+The main C<runtests()> routine parses arguments on the command line or
+passed via the environment variable C<AUTOPROVE_OPTS>.  All autoprove
+options are prefixed with C<--autoprove-> (in both the command line and
+the environmental variable).
+
+Valid options:
+
+=over
+
+=item C<--autoprove-no-skip-initial> (Default)
+
+=item C<--autoprove-skip-initial>
+
+These options allow control over whether the initial tests are run when
+autoprove is first started. By default, C<runtests()> will run all tests
+when executed, and then wait for changes.
+
+Using C<--autoprove-skip-initial> skips the initial tests and goes
+straight to watching for changes to files.  Generally, you should run all
+tests, in case something changed while C<Test::Continuous> was not
+running.  The C<--autoprove-no-skip-initial> is provided so that you can
+override an environmental variable C<AUTOPROVE_OPTS> that includes
+C<--autoprove-skip-initial> via the command line, by passing autoprove
+the C<--autoprove-no-skip-initial> option.
+
+=back
 
 =head1 DEPENDENCIES
 

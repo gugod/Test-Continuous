@@ -1,3 +1,3 @@
 use Test::Class::Load 't/lib';
-undef($ENV{TEST_CONTINUOUS}); # In case it's set.
+undef($ENV{AUTOPROVE_OPTS}); # In case it's set.
 Test::Class->runtests(@ARGV);
