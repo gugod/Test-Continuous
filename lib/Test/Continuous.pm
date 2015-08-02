@@ -15,7 +15,9 @@ use Test::Continuous::Formatter;
 use File::ChangeNotify;
 use Git::Repository;
 use YAML;
+use Term::Cap;
 
+my $cls;
 my @prove_args;
 my @tests;
 my @changes;
@@ -147,7 +149,7 @@ sub _run_once {
     my @tests = _tests_to_run;
     my @command_args = ( @prove_args, @tests, '::', @classes );
 
-    print "\033[2J\033[0;0H"; #cls
+    _cls();
     print "prove --norc " . join(" ", @command_args) . "\n";
 
     # This is from the prove source code
@@ -256,6 +258,35 @@ sub runtests {
            sleep 3;
         }
     }
+}
+
+sub _cls {
+
+    # Cache clear screen
+    if (!defined($cls)) {
+        if ( -t STDOUT ) {
+            # We are on a terminal
+            
+            my $term = Term::Cap->Tgetent({OSPEED=>9600});
+            $cls = $term->Tputs('cl');
+
+            if ($cls eq '') {
+                # It's a stupid terminal.
+                # We set this to null so it'll get a sensible default
+                # later.
+                $cls = undef;
+            }
+        }
+
+        # We're either not using a terminal or we're using a really
+        # stupid terminal.
+        if (!defined($cls)) {
+            # Not on a terminal, just skip a couple lines
+            $cls = "\n\n";
+        }
+    }
+
+    print $cls;
 }
 
 1;
