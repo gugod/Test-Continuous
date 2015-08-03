@@ -137,9 +137,12 @@ sub _get_exclude_list {
 
     # Attempt to get the git directory Test::Continuous was run in
     my $path = getcwd;
-    my $git_repo_top_level = Git::Repository->run( 'rev-parse', '--show-toplevel', {
-        cwd => $path,
-    });
+    my $git_repo_top_level;
+    eval {
+        $git_repo_top_level = Git::Repository->run( 'rev-parse', '--show-toplevel', {
+            cwd => $path,
+        });
+    };
     my ( $git_ignore, $git_dir );
 
     # If the git command came up with a git repo use it's .gitignore
@@ -184,7 +187,7 @@ sub _run_once {
     my @command_args = ( @prove_args, @tests, '::', @classes );
 
     _cls();
-    print "prove --norc " . join(" ", @command_args) . "\n";
+    print "prove --norc -v -m " . join(" ", @command_args) . "\n";
 
     # This is from the prove source code
     my $script = <<'EOS';
