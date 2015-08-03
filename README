@@ -37,17 +37,31 @@ INTERFACE
         this distribution to do this instead.
 
 CONFIGURATION AND ENVIRONMENT
+
     Test::Continuous requires no configuration files.
 
-    Your C<.proverc> is NOT loaded, even though it's based on App::Prove.  
+    Your ".proverc. is NOT loaded, even though it's based on App::Prove.
 
-    One environmental variable is parsed, C<TEST_CONTINUOUS>.  This variable
-    can only have one value, C<SKIP_INITIAL>, which signals to this module
-    that you do not want the module to run all test files when the program
-    starts.  Generally, you should run all tests, in case something changed
-    while C<Test::Continuous> was not running, but this functionality may
-    be useful in some circumstances.  If C<TEST_CONTINUOUS> is not set, the
-    standard initial tests are run (this is recommended).
+    The main "runtests()" routine parses arguments on the command line or
+    passed via the environment variable "AUTOPROVE_OPTS".  All autoprove
+    options are prefixed with "--autoprove-" (in both the command line and
+    the environmental variable).
+
+    Valid options:
+
+    "--autoprove-no-skip-initial" (Default)
+    "--autoprove-skip-initial"
+        These options allow control over whether the initial tests are run
+        when autoprove is first started. By default, "runtests()" will run
+        all tests when executed, and then wait for changes.
+
+        Using "--autoprove-skip-initial" skips the initial tests and goes
+        straight to watching for changes to files.  Generally, you should
+        run all tests, in case something changed while "Test::Continuous"
+        was not running. The "--autoprove-no-skip-initial" is provided so
+        that you can override an environmental variable "AUTOPROVE_OPTS"
+        that includes "--autoprove-skip-initial" via the command line, by
+        passing autoprove the "--autoprove-no-skip-initial" option.
 
 DEPENDENCIES
     App::Prove, Log::Dispatch, Log::Dispatch::DesktopNotification,
