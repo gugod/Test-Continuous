@@ -1,5 +1,9 @@
 Revision history for Test-Continuous
 
+- Fix the crash when running under a non-git dir.
+- Add "--autoprove-skip-initial" CLI arg to skip the initial test
+
+
 0.75:
 - Use .gitignore to build exclude list if it exists. (Sean Zellmer)++
 - better suppport for Test::Class-based tests. (Nelo Onyiah)++
