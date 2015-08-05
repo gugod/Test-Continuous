@@ -1,8 +1,9 @@
 Revision history for Test-Continuous
 
-- Fix the crash when running under a non-git dir.
-- Add "--autoprove-skip-initial" CLI arg to skip the initial test
-
+0.76:
+- Fix the crash when running under a non-git dir. (Joel Maslak)++
+- Add "--autoprove-skip-initial" CLI arg to skip the initial test (Joel Maslak)++
+- Fix: `autoprove <dir>` now works as it is supposed to be. (Sean Zellmer)++
 
 0.75:
 - Use .gitignore to build exclude list if it exists. (Sean Zellmer)++
