@@ -74,7 +74,7 @@ subtest 'git repo w/ .gitignore and w/o files' => sub {
    isa_ok $r, 'Git::Repository';
    my $gitignore_handle;
    open ($gitignore_handle, '>', $gitignore_repo.'/.gitignore') or die('Unable to open '.$gitignore_repo.'/.gitignore');
-   print $gitignore_handle "*.swp";
+   print $gitignore_handle join "\n", '*.swp', '!/.gitignore';
    close ($gitignore_handle) or die ("Unable to close ".$gitignore_repo.'/.gitignore');
 
    # Go there
@@ -126,8 +126,7 @@ subtest 'git repo w/ .gitignore and w/ files' => sub {
    isa_ok $r, 'Git::Repository';
    my $gitignore_handle;
    open ($gitignore_handle, '>', $gitignore_repo.'/.gitignore') or die('Unable to open '.$gitignore_repo.'/.gitignore');
-   print $gitignore_handle '*.swp
-META.*';
+   print $gitignore_handle join "\n", '*.swp', 'META.*', '!/.gitignore';
    close ($gitignore_handle) or die ("Unable to close ".$gitignore_repo.'/.gitignore');
 
    # Touch some files to be included in the exclude list
