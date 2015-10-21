@@ -5,6 +5,7 @@ package Test::Continuous::Formatter;
 use base 'TAP::Formatter::Base';
 use Test::Continuous::Notifier;
 use Test::Continuous::Formatter::Session;
+use File::Spec;
 
 use 5.008;
 
@@ -47,8 +48,7 @@ sub summary {
 
         my @t = $aggregate->descriptions;
         for my $t (@t) {
-            $t =~ /(t\/.*$)/;
-            my $tfile = $1;
+            my $tfile = File::Spec->abs2rel($t);
             my ($parser) = $aggregate->parsers($t);
             if (my @r = $parser->failed()) {
                 $summary .= "Failed test(s) in $tfile: @r\n";
