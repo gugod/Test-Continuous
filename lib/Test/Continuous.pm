@@ -42,8 +42,8 @@ sub _classify_opts {
 
     if (@opts) {
         my (@not_opts) = grep   { !( /^--autoprove-/i ) }   @opts;
-        @not_files     = grep   { !( -f $_ or -d $_ ) }     @not_opts;
-        @tests         = grep   {    -f $_ or -d $_   }     @not_opts;
+        @not_files     = grep   { !( -f $_ or -d _ ) }     @not_opts;
+        @tests         = grep   {    -f $_ or -d _   }     @not_opts;
         @classes       = after  { $_ eq '::' } @not_files;
         @prove_args    = before { $_ eq '::' } @not_files;
     }
