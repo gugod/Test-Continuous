@@ -1,10 +1,7 @@
+package Test::Continuous;
+use 5.008;
 use strict;
 use warnings;
-
-package Test::Continuous;
-
-use 5.008;
-
 our $VERSION = '0.76';
 
 use File::Find;
@@ -348,24 +345,23 @@ the same concept implemented in Ruby's world.
 
 =item runtests
 
-This function starts monitoring the mtime of all files under current
-working directory. If there's any update, it runs your module tests
-under t/ directory with L<App::Prove>.
+This function starts monitoring the updates of all files under current
+working directory. When any files are updated, module tests under t/
+directory are processed with L<App::Prove>.
 
 You could call it from command line like this:
 
     perl -MTest::Continuous -e Test::Continuous::runtests
 
-However, it's recommended to use the L<autoprove> program shipped with
-this distribution to do this instead.
+Or, alternatively, use the L<autoprove> program shipped with
+this distribution to do so.
 
 =back
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
-Test::Continuous requires no configuration files.
-
-Your C<.proverc> is NOT loaded, even though it's based on L<App::Prove>.
+Test::Continuous requires no configuration files. Event hough it is based
+on C<App::Prove>, your C<.proverc> is NOT loaded.
 
 The main C<runtests()> routine parses arguments on the command line or
 passed via the environment variable C<AUTOPROVE_OPTS>.  All autoprove
